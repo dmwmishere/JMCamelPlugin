@@ -12,14 +12,14 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="Configuration for Camel Context" enabled="true">
+      <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="CamelContext-1" enabled="true">
         <boolProp name="startOnTestStart">true</boolProp>
         <stringProp name="routeDefFile"></stringProp>
         <stringProp name="routeXml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;routes xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
-    &lt;route&gt;
+    &lt;route id=&quot;timerRoute&quot;&gt;
         &lt;from uri=&quot;timer:qwerty?delay=1000&amp;amp;repeatCount=0&quot;/&gt;
-        &lt;bean ref=&quot;test2&quot; method=&quot;printStr&quot;/&gt;
+        &lt;bean ref=&quot;test3&quot; method=&quot;printStr&quot;/&gt;
         &lt;log message=&quot;TIMER TICK conf122!!!&quot; /&gt;
     &lt;/route&gt;
     &lt;route&gt;
@@ -42,14 +42,14 @@
         <stringProp name="contextName">jm-camel-context-1</stringProp>
       </org.dmwm.jmeter.config.CamelConfigElement>
       <hashTree/>
-      <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="Configuration for Camel Context" enabled="true">
+      <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="CamelContext-2" enabled="true">
         <boolProp name="startOnTestStart">true</boolProp>
         <stringProp name="routeDefFile"></stringProp>
         <stringProp name="routeXml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;routes xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
     &lt;route autoStartup=&quot;true&quot;&gt;
         &lt;from uri=&quot;timer:qwerty?delay=1000&amp;amp;repeatCount=0&quot;/&gt;
-        &lt;bean ref=&quot;test3&quot; method=&quot;printStr&quot;/&gt;
+        &lt;bean ref=&quot;test2&quot; method=&quot;printStr&quot;/&gt;
         &lt;log message=&quot;TIMER TICK conf2!!!&quot; /&gt;
     &lt;/route&gt;
     &lt;route&gt;
@@ -64,8 +64,8 @@
     &lt;/route&gt;
 &lt;/routes&gt;</stringProp>
         <collectionProp name="registryBeans">
-          <elementProp name="test3" elementType="org.dmwm.jmeter.data.RegistryTableElement">
-            <stringProp name="name">test3</stringProp>
+          <elementProp name="test2" elementType="org.dmwm.jmeter.data.RegistryTableElement">
+            <stringProp name="name">test2</stringProp>
             <stringProp name="clazz">org.dmwm.jmeter.beans.TestBean</stringProp>
           </elementProp>
         </collectionProp>
@@ -76,12 +76,12 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1000</stringProp>
+          <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">3</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
@@ -128,8 +128,12 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">1000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="All samples" enabled="false">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="All samples" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>

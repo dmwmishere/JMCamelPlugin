@@ -15,13 +15,17 @@ repositories {
 
 dependencies {
     //Jmeter stuff:
-    compileOnly "org.apache.jmeter:ApacheJMeter_components:${jmeterVersion}"
+    compile "org.apache.jmeter:ApacheJMeter_components:${jmeterVersion}"
 
     // Camel stuff:
     compile "org.apache.camel:camel-core:${camelVersion}"
+    compile "org.picocontainer:picocontainer:2.15"
+    compile "org.reflections:reflections:0.9.10"
 
-    compileOnly 'org.projectlombok:lombok:1.16.20'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly "org.projectlombok:lombok:1.16.20"
+    testCompile "junit:junit:4.12"
+    testCompile "org.hamcrest:hamcrest-all:1.3"
+
 }
 
 jar {
@@ -45,6 +49,8 @@ task runIt(dependsOn: jar){
     doLast{
         exec{
             environment JAVA_HOME: "$System.env.JAVA_HOME"
+            environment JVM_ARGS: "-Dbean_class_path=org.dmwm.jmeter.beans"
+
             executable "$jmeter_home/bin/jmeter"
             args "-t", "$projectDir/scenario/TestPlugin.jmx"
         }

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.testbeans.TestBean;
@@ -16,11 +15,15 @@ import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
+import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.data.RegistryTableElement;
+import org.dmwm.jmeter.framework.PicoRegistry;
 import org.dmwm.jmeter.util.CamelContextUtils;
+import org.reflections.Reflections;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Set;
 
 @Slf4j
 @Getter
@@ -31,6 +34,10 @@ public class CamelConfigElement extends AbstractTestElement
     private String contextName;
     private String routeDefFile;
     private String routeXml;
+
+    private final static String[] CLASS_PATHS = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
+
+    private final static Reflections refl = new Reflections(CLASS_PATHS);
 
     private Collection<RegistryTableElement> registryBeans;
 
@@ -51,9 +58,14 @@ public class CamelConfigElement extends AbstractTestElement
         this.setRunningVersion(true);
         TestBeanHelper.prepare(this);
 
-        SimpleRegistry registry = new SimpleRegistry();
+        PicoRegistry registry = new PicoRegistry();
+
         registryBeans.forEach(element ->
                 CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
+
+        Set<Class<?>> classes = refl.getTypesAnnotatedWith(JCBean.class);
+        log.info("Found classes to add to camel context: {}", classes);
+        classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
         log.info("CCBG TEST STARTED");
         JMeterVariables variables = getThreadContext().getVariables();
         if(variables.getObject(contextName) == null) {
