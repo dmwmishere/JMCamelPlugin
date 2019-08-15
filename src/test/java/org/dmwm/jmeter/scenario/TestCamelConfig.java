@@ -1,14 +1,10 @@
 package org.dmwm.jmeter.scenario;
 
-import org.apache.camel.CamelContext;
-import org.apache.jmeter.save.SaveService;
-
 import org.apache.jmeter.engine.StandardJMeterEngine;
+import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestPlan;
-import org.apache.jmeter.threads.JMeterThread;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
-
 import org.dmwm.jmeter.test.TestListener;
 import org.junit.Before;
 import org.junit.Test;

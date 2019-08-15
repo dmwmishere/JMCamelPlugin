@@ -13,12 +13,9 @@ import static org.junit.Assert.fail;
 
 public class TestListener implements TestStateListener {
 
-    private CamelContext cctx;
-
     private final String camelContextName;
-
     private final TestPlan plan;
-
+    private CamelContext cctx;
     private List<BiConsumer<CamelContext, JMeterContext>> preChecks = new ArrayList<>();
     private List<BiConsumer<CamelContext, JMeterContext>> postChecks = new ArrayList<>();
 

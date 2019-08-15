@@ -1,13 +1,13 @@
 package org.dmwm.jmeter.config;
 
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-
 import org.apache.jmeter.testbeans.BeanInfoSupport;
 import org.apache.jmeter.testbeans.gui.FileEditor;
 import org.apache.jmeter.testbeans.gui.TableEditor;
 import org.apache.jmeter.testbeans.gui.TypeEditor;
 import org.dmwm.jmeter.data.RegistryTableElement;
+
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 
 public class CamelConfigElementBeanInfo extends BeanInfoSupport {
 

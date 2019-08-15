@@ -10,14 +10,16 @@ public class RegistryTableElement extends AbstractTestElement {
 
     public static final String INSTANCE = "instance";
 
-    public RegistryTableElement() { super(); }
+    public RegistryTableElement() {
+        super();
+    }
 
     public String getName() {
         return getProperty(BEAN_NAME).getStringValue();
     }
 
     public void setName(String name) {
-        setProperty(BEAN_NAME,name);
+        setProperty(BEAN_NAME, name);
     }
 
     public String getClazz() {
@@ -25,7 +27,7 @@ public class RegistryTableElement extends AbstractTestElement {
     }
 
     public void setClazz(String clazz) {
-        setProperty(CLASS_NAME,clazz);
+        setProperty(CLASS_NAME, clazz);
     }
 
     public String getInstance() {
@@ -33,6 +35,6 @@ public class RegistryTableElement extends AbstractTestElement {
     }
 
     public void setInstance(String instance) {
-        setProperty(INSTANCE,instance);
+        setProperty(INSTANCE, instance);
     }
 }

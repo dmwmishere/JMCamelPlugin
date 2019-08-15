@@ -7,14 +7,14 @@ public class A {
 
     private String value;
 
-    public String getValue() {
-        return value;
-    }
-
-    public A(){
+    public A() {
         System.out.println("Constructor A");
 
         value = "QWERTY";
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

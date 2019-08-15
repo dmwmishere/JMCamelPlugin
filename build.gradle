@@ -5,7 +5,7 @@ plugins {
 group 'org.dmwm.jmeter'
 version '1.0-SNAPSHOT'
 
-def jmeter_home="$System.env.JMETER_HOME"
+def jmeter_home = "$System.env.JMETER_HOME"
 
 sourceCompatibility = 1.8
 
@@ -30,24 +30,24 @@ dependencies {
 
 jar {
     from('src/main/java') {
-        include  '**/*.properties'
+        include '**/*.properties'
     }
 }
 
-task runIt(dependsOn: jar){
+task runIt(dependsOn: jar) {
     doFirst {
-        if(System.env.JMETER_HOME == null || System.env.JAVA_HOME == null){
+        if (System.env.JMETER_HOME == null || System.env.JAVA_HOME == null) {
             throw new GradleException('Either JMETER_HOME or JAVA_HOME not specified!')
         }
     }
-    doLast{
+    doLast {
         copy {
             from "$buildDir/libs/"
             into "$jmeter_home/lib/ext/"
         }
     }
-    doLast{
-        exec{
+    doLast {
+        exec {
             environment JAVA_HOME: "$System.env.JAVA_HOME"
             environment JVM_ARGS: "-Dbean_class_path=org.dmwm.jmeter.beans"
 

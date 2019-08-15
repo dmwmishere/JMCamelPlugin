@@ -6,7 +6,7 @@ import org.dmwm.jmeter.framework.JCBean;
 public class TestBean2 implements TestInterface {
 
     @Override
-    public void printStr(){
+    public void printStr() {
         System.out.println("PRINT STRING BEAN " + this.getClass().getName());
     }
 

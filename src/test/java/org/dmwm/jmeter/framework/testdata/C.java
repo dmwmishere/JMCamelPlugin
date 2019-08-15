@@ -4,7 +4,7 @@ public class C implements I {
 
     private final int VAL = 666;
 
-    public C(){
+    public C() {
         System.out.println("constructor C");
     }
 

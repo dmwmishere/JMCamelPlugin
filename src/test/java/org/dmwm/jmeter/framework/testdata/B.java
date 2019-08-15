@@ -8,13 +8,13 @@ public class B {
 
     private A a;
 
-    public A getA() {
-        return a;
-    }
-
-    public B(A a){
+    public B(A a) {
         System.out.println("Constructor B");
         this.a = a;
+    }
+
+    public A getA() {
+        return a;
     }
 
     @Override

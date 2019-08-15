@@ -1,11 +1,7 @@
 package org.dmwm.jmeter.framework;
 
 import com.google.common.collect.ImmutableMap;
-import org.dmwm.jmeter.framework.testdata.A;
-import org.dmwm.jmeter.framework.testdata.B;
-import org.dmwm.jmeter.framework.testdata.C;
-import org.dmwm.jmeter.framework.testdata.D;
-import org.dmwm.jmeter.framework.testdata.I;
+import org.dmwm.jmeter.framework.testdata.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +12,13 @@ import static org.hamcrest.Matchers.hasEntry;
 
 public class TestPicoRegistry {
 
-    private PicoRegistry registry;
-
     private final ImmutableMap<String, Class<?>> TEST_DATA =
             ImmutableMap.<String, Class<?>>builder()
                     .put("BB", B.class)
                     .put("CC", C.class)
                     .put("DD", D.class)
                     .build();
+    private PicoRegistry registry;
 
     @Before
     public void init() {

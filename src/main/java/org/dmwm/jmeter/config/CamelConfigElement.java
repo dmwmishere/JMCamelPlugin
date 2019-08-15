@@ -15,8 +15,8 @@ import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.data.RegistryTableElement;
+import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.framework.PicoRegistry;
 import org.dmwm.jmeter.util.CamelContextUtils;
 import org.reflections.Reflections;
@@ -31,17 +31,31 @@ import java.util.Set;
 public class CamelConfigElement extends AbstractTestElement
         implements ConfigElement, TestBean, TestStateListener {
 
+    private final static String[] CLASS_PATHS = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
+    private final static Reflections refl = new Reflections(CLASS_PATHS);
     private String contextName;
     private String routeDefFile;
     private String routeXml;
-
-    private final static String[] CLASS_PATHS = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
-
-    private final static Reflections refl = new Reflections(CLASS_PATHS);
-
     private Collection<RegistryTableElement> registryBeans;
 
     private transient CamelContext cctx;
+
+    public static CamelContext getContext(String contextName) throws CamelException {
+        Object cctxObj =
+                JMeterContextService.getContext().getVariables().getObject(contextName);
+
+        if (cctxObj == null) {
+            throw new CamelException("Context " + contextName + " not defined!");
+        } else {
+            if (cctxObj instanceof CamelContext) {
+                return (CamelContext) cctxObj;
+            } else {
+                throw new CamelException("Object " + contextName +
+                        " not a camel context: " + cctxObj.getClass().getName());
+            }
+        }
+
+    }
 
     @Override
     public void addConfigElement(ConfigElement config) {
@@ -68,8 +82,8 @@ public class CamelConfigElement extends AbstractTestElement
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
         log.info("CCBG TEST STARTED");
         JMeterVariables variables = getThreadContext().getVariables();
-        if(variables.getObject(contextName) == null) {
-            synchronized(this) {
+        if (variables.getObject(contextName) == null) {
+            synchronized (this) {
                 cctx = new DefaultCamelContext(registry);
                 ((DefaultCamelContext) cctx).setName(contextName);
                 try {
@@ -107,23 +121,6 @@ public class CamelConfigElement extends AbstractTestElement
     @Override
     public void testEnded(String host) {
         testEnded();
-    }
-
-    public static CamelContext getContext(String contextName) throws CamelException {
-        Object cctxObj =
-                JMeterContextService.getContext().getVariables().getObject(contextName);
-
-        if(cctxObj == null){
-            throw new CamelException("Context " + contextName + " not defined!");
-        } else {
-            if(cctxObj instanceof CamelContext){
-                return (CamelContext) cctxObj;
-            } else {
-                throw new CamelException("Object " + contextName +
-                        " not a camel context: " + cctxObj.getClass().getName());
-            }
-        }
-
     }
 
 }

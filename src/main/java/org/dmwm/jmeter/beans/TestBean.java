@@ -2,7 +2,7 @@ package org.dmwm.jmeter.beans;
 
 public class TestBean {
 
-    public void printStr(){
+    public void printStr() {
         System.out.println("PRINT STRING BEAN");
     }
 

@@ -5,7 +5,7 @@ import org.dmwm.jmeter.framework.JCBean;
 @JCBean("DD")
 public class D extends C {
 
-    public D(){
+    public D() {
         System.out.println("constructor D");
     }
 

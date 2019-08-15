@@ -28,5 +28,4 @@ public class CamelSamplerBeanInfo extends BeanInfoSupport {
     }
 
 
-
 }
