@@ -1,6 +1,7 @@
 # Jmeter Camel plugin
 use of camel context within jmeter tests
-Installation:
+
+# Installation:
 1. build
 2. copy jar into <jmeter_home>/lib/ext
 3. copy camel module jars into <jmeter_home>/lib

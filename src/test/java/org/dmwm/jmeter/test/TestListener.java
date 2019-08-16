@@ -39,7 +39,7 @@ public class TestListener implements TestStateListener {
         try {
             preChecks.forEach(check -> check.accept(cctx, plan.getThreadContext()));
         } catch (Throwable t) {
-            fail(t.getClass().getSimpleName() + " while performing post check: " + t.getMessage());
+            fail(t.getClass().getSimpleName() + " while performing pre check: " + t.getMessage());
         }
     }
 
