@@ -3,8 +3,7 @@ package org.dmwm.jmeter.scenario;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestPlan;
-import org.apache.jmeter.util.JMeterUtils;
-import org.apache.jorphan.collections.HashTree;
+import org.dmwm.jmeter.test.AbstractJMeterTest;
 import org.dmwm.jmeter.test.TestListener;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,25 +14,14 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class TestCamelConfig extends StandardJMeterEngine {
-
-    private static final String JMETER_HOME = System.getProperty("JMETER_HOME");
-
-    private HashTree testPlanTree;
-    private TestPlan plan;
-
-    private TestListener listener;
+public class TestCamelConfig extends AbstractJMeterTest {
 
     public TestCamelConfig() throws IOException {
-        JMeterUtils.loadJMeterProperties(JMETER_HOME + "/bin/jmeter.properties");
-        JMeterUtils.setJMeterHome(JMETER_HOME);
-        JMeterUtils.initLocale();
-        SaveService.loadProperties();
+        testPlanTree = SaveService.loadTree(new File("scenario/TestPlugin.jmx"));
     }
 
     @Before
-    public void init() throws IOException {
-        testPlanTree = SaveService.loadTree(new File("scenario/TestPlugin.jmx"));
+    public void init() {
         plan = (TestPlan) testPlanTree.getArray()[0];
         listener = new TestListener(plan, "jm-camel-context-1");
         StandardJMeterEngine.register(listener);

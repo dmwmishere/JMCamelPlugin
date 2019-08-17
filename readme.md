@@ -2,16 +2,15 @@
 use of camel context within jmeter tests
 
 # Installation:
-1. build
+1. run build task
 2. copy jar into <jmeter_home>/lib/ext
-3. copy camel module jars into <jmeter_home>/lib
+
+# Usage
+See scenario/TestPlugin.jmx for usage examples
 
 # TODO:
 
 1. Gui:
- * Registry
- * Store camelcontext by name (add string field)
- * Bean DI
  * Properties to context
 
 2. Sampler:
