@@ -32,7 +32,7 @@ public class CamelConfigElement extends AbstractTestElement
         implements ConfigElement, TestBean, TestStateListener {
 
     private final static String[] CLASS_PATHS = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
-    private final static Reflections refl = new Reflections(CLASS_PATHS);
+
     private String contextName;
     private String routeDefFile;
     private String routeXml;
@@ -76,8 +76,7 @@ public class CamelConfigElement extends AbstractTestElement
 
         registryBeans.forEach(element ->
                 CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
-
-        Set<Class<?>> classes = refl.getTypesAnnotatedWith(JCBean.class);
+        Set<Class<?>> classes = new Reflections(CLASS_PATHS).getTypesAnnotatedWith(JCBean.class);
         log.info("Found classes to add to camel context: {}", classes);
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
         log.info("CCBG TEST STARTED");
