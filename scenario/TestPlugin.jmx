@@ -7,11 +7,27 @@
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-        <collectionProp name="Arguments.arguments"/>
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="testPropertyValue" elementType="Argument">
+            <stringProp name="Argument.name">testPropertyValue</stringProp>
+            <stringProp name="Argument.value">sample111</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="OtherUserVars" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="testPropertyVariable2" elementType="Argument">
+            <stringProp name="Argument.name">testPropertyVariable2</stringProp>
+            <stringProp name="Argument.value">sample222</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
       <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="CamelContext-1" enabled="true">
         <boolProp name="startOnTestStart">true</boolProp>
         <stringProp name="routeDefFile"></stringProp>
@@ -20,7 +36,7 @@
     &lt;route id=&quot;timerRoute&quot;&gt;
         &lt;from uri=&quot;timer:qwerty?delay=1000&amp;amp;repeatCount=0&quot;/&gt;
         &lt;bean ref=&quot;test3&quot; method=&quot;printStr&quot;/&gt;
-        &lt;log message=&quot;TIMER TICK conf122!!!&quot; /&gt;
+        &lt;log message=&quot;TIMER TICK conf122!!! ${properties:testPropertyValue} {{TESTSTART.MS}}&quot; /&gt;
     &lt;/route&gt;
     &lt;route&gt;
     		&lt;from uri=&quot;direct:test&quot; /&gt;

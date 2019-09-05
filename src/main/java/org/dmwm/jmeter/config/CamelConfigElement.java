@@ -85,6 +85,7 @@ public class CamelConfigElement extends AbstractTestElement
             synchronized (this) {
                 cctx = new DefaultCamelContext(registry);
                 ((DefaultCamelContext) cctx).setName(contextName);
+                cctx.addComponent("properties", CamelContextUtils.initProperties(getThreadContext()));
                 try {
                     RoutesDefinition routes =
                             cctx.loadRoutesDefinition(new StringInputStream(routeXml, Charset.defaultCharset()));
