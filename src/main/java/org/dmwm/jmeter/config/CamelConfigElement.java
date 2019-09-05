@@ -6,8 +6,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.RoutesDefinition;
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
@@ -16,6 +14,7 @@ import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.data.RegistryTableElement;
+import org.dmwm.jmeter.framework.ContextBuilder;
 import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.framework.PicoRegistry;
 import org.dmwm.jmeter.util.CamelContextUtils;
@@ -83,13 +82,14 @@ public class CamelConfigElement extends AbstractTestElement
         JMeterVariables variables = getThreadContext().getVariables();
         if (variables.getObject(contextName) == null) {
             synchronized (this) {
-                cctx = new DefaultCamelContext(registry);
-                ((DefaultCamelContext) cctx).setName(contextName);
-                cctx.addComponent("properties", CamelContextUtils.initProperties(getThreadContext()));
                 try {
-                    RoutesDefinition routes =
-                            cctx.loadRoutesDefinition(new StringInputStream(routeXml, Charset.defaultCharset()));
-                    cctx.addRouteDefinitions(routes.getRoutes());
+                    cctx = ContextBuilder
+                            .builder()
+                            .setName(contextName)
+                            .setRegistry(registry)
+                            .setProperties(CamelContextUtils.initProperties(getThreadContext()))
+                            .addRoutes(new StringInputStream(routeXml, Charset.defaultCharset()))
+                            .build();
                     cctx.start();
                     variables.putObject(contextName, cctx);
                 } catch (Exception e) {

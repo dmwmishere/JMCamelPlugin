@@ -17,6 +17,8 @@ public interface Builder {
 
     Builder addRoutes(RoutesDefinition routesDefinition) throws Exception;
 
+    Builder setName(String contextName);
+
     Builder setProperties(PropertiesComponent propertiesComponent);
 
     Builder setProperties(Properties properties);

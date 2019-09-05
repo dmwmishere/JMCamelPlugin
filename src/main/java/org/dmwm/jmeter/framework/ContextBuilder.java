@@ -11,7 +11,7 @@ import org.dmwm.jmeter.util.CamelContextUtils;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ContextBuilder implements Builder{
+public class ContextBuilder implements Builder {
 
     private final DefaultCamelContext cctx;
 
@@ -38,6 +38,12 @@ public class ContextBuilder implements Builder{
     }
 
     @Override
+    public Builder setName(String contextName) {
+        cctx.setName(contextName);
+        return this;
+    }
+
+    @Override
     public Builder setProperties(PropertiesComponent propertiesComponent) {
         cctx.addComponent("properties", propertiesComponent);
         return this;
@@ -60,5 +66,8 @@ public class ContextBuilder implements Builder{
         return cctx;
     }
 
+    public static Builder builder() {
+        return new ContextBuilder();
+    }
 
 }
