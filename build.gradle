@@ -65,5 +65,5 @@ task runIt(dependsOn: jar) {
 }
 
 test {
-    exclude '**/*'
+    exclude '**/*TestCamelConfig*'
 }
