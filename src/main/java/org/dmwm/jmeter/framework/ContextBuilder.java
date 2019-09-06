@@ -11,6 +11,10 @@ import org.dmwm.jmeter.util.CamelContextUtils;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * implements builder for default camel context
+ * @see DefaultCamelContext
+ */
 public class ContextBuilder implements Builder {
 
     private final DefaultCamelContext cctx;

@@ -4,13 +4,19 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.jmeter.threads.JMeterContext;
+import org.dmwm.jmeter.framework.JCBean;
+import org.dmwm.jmeter.framework.PicoRegistry;
 import org.picocontainer.MutablePicoContainer;
+import org.reflections.Reflections;
 
 import java.util.Properties;
+import java.util.Set;
 
 @Slf4j
 @UtilityClass
 public class CamelContextUtils {
+
+    private final static String[] CLASS_PATHS = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
 
     public void initBean(String name, String className, MutablePicoContainer picoContainer) {
         try {
@@ -35,10 +41,18 @@ public class CamelContextUtils {
         return pc;
     }
 
-    public PropertiesComponent initProperties(Properties properties){
+    public PropertiesComponent initProperties(Properties properties) {
         PropertiesComponent pc = new PropertiesComponent();
         pc.setInitialProperties(properties);
         return pc;
+    }
+
+    public PicoRegistry initRegistry() {
+        Set<Class<?>> classes = new Reflections(CLASS_PATHS).getTypesAnnotatedWith(JCBean.class);
+        log.info("Found classes to add to camel context: {}", classes);
+        PicoRegistry registry = new PicoRegistry();
+        classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
+        return registry;
     }
 
 }

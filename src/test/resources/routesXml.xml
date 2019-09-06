@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <route id="timerRoute">
+        <from uri="timer:qwerty?delay=1000&amp;repeatCount=0"/>
+        <bean ref="test3" method="printStr"/>
+        <log message="TIMER TICK conf122!!! ${properties:testPropertyValue}" />
+    </route>
+    <route>
+        <from uri="direct:test" />
+        <!--log message="DIRECT BODY: ${body}"/-->
+        <transform>
+            <simple>response for ${body}</simple>
+        </transform>
+        <setHeader headerName="TestHeader">
+            <constant>TEST+HEADER</constant>
+        </setHeader>
+    </route>
+</routes>
