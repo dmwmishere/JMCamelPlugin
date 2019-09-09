@@ -23,8 +23,11 @@ import java.util.stream.Collectors;
  *  JMETER_HOME - absolute path to jmeter distribution
  *  jc_context_name - camel context name (default is jmeter-camel-context)
  *  jc_context_route_definition - camel route definition xml file
+ *  bean_class_path - scan for classes in extension
  * Command sample:
- * java -DJMETER_HOME=... -Djava.rmi.server.hostname=127.0.0.1 -jar plugin.jar --testPropertyValue=qwerty
+ * java -DJMETER_HOME=/apache-jmeter-5.0 -Djava.rmi.server.hostname=127.0.0.1
+ * -Djc_context_route_definition=./routesXml.xml
+ * -cp ../*:./* org.dmwm.jmeter.server.Main --testPropertyValue=qwerty --jc_context_name=SAMPLE
  */
 public class Main {
 

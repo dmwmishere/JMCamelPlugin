@@ -54,6 +54,15 @@ public class CamelDirectSampler extends AbstractJavaSamplerClient {
                 .orElse("null").toString());
         res.setResponseHeaders(exchange.getIn().getHeaders().toString());
 
+
+//        Object response = cctx.createFluentProducerTemplate()
+//                .to("direct:".concat(directName))
+//                .withBody(body)
+//                .request();
+//
+//        res.setResponseData(Optional.ofNullable(response)
+//                .orElse("null").toString());
+
         res.sampleEnd();
 
         return res;

@@ -24,7 +24,6 @@ public class SingletonCamelContext {
         return cctx;
     }
 
-    @Deprecated
     public static CamelContext instance() throws Exception {
         if (cctx == null) {
             synchronized (SingletonCamelContext.class) {

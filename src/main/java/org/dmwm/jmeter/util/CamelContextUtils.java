@@ -49,7 +49,7 @@ public class CamelContextUtils {
 
     public PicoRegistry initRegistry() {
         Set<Class<?>> classes = new Reflections(CLASS_PATHS).getTypesAnnotatedWith(JCBean.class);
-        log.info("Found classes to add to camel context: {}", classes);
+        log.info("Found classes to add to camel context: {} from {}", classes, CLASS_PATHS);
         PicoRegistry registry = new PicoRegistry();
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
         return registry;
