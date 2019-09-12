@@ -17,4 +17,8 @@ public class C implements I {
     public String toString() {
         return "C[ " + VAL + " ]";
     }
+
+    public int getVAL() {
+        return VAL;
+    }
 }

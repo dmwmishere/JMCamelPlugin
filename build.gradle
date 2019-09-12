@@ -59,7 +59,6 @@ task runIt(dependsOn: jar) {
 
             executable "$jmeter_home/bin/jmeter"
             args "-t", "$projectDir/scenario/TestPlugin.jmx"
-//            args "-t", "$projectDir/scenario/InnerSamplerRemote.jmx"
         }
     }
 }
