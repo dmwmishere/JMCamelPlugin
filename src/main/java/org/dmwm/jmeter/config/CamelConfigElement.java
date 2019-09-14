@@ -55,7 +55,6 @@ public class CamelConfigElement extends AbstractTestElement
 
     @Override
     public void addConfigElement(ConfigElement config) {
-        System.out.println("CCBG addConfigElement");
     }
 
     @Override
@@ -73,7 +72,6 @@ public class CamelConfigElement extends AbstractTestElement
         registryBeans.forEach(element ->
                 CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
 
-        log.info("CCBG TEST STARTED");
         JMeterVariables variables = getThreadContext().getVariables();
         if (variables.getObject(contextName) == null) {
             synchronized (this) {
@@ -105,7 +103,6 @@ public class CamelConfigElement extends AbstractTestElement
 
     @Override
     public void testEnded() {
-        log.info("CCBG TEST ENDED");
         try {
             cctx.stop();
         } catch (Exception e) {

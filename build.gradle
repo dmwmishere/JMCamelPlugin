@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group 'org.dmwm.jmeter'
@@ -65,4 +66,33 @@ task runIt(dependsOn: jar) {
 
 test {
     exclude '**/*TestCamelConfig*'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'CamelPlugin'
+            from components.java
+            pom {
+                name = 'JMeter Camel plugin'
+                description = 'Use of camel context within jmeter tests'
+                url = 'http://github.com/dmwmishere/JMCamelPlugin'
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'dmwmishere'
+                        name = 'Stanislaw'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:dmwmishere/JMCamelPlugin.git'
+                    url = 'http://github.com/dmwmishere/JMCamelPlugin'
+                }
+            }
+        }
+    }
 }
