@@ -6,11 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
+import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.testbeans.TestBean;
-import org.apache.jmeter.testelement.AbstractTestElement;
 import org.dmwm.jmeter.config.CamelConfigElement;
 
 import java.util.Optional;
@@ -18,7 +17,9 @@ import java.util.Optional;
 @Slf4j
 @Getter
 @Setter
-public class CamelSampler extends AbstractTestElement implements Sampler, TestBean {
+public class CamelSampler extends AbstractSampler implements TestBean {
+
+    private static final long serialVersionUID = 277235054922307347L;
 
     private String contextName;
     private String directName;

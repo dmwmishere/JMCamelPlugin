@@ -27,6 +27,7 @@ import java.util.Collection;
 public class CamelConfigElement extends AbstractTestElement
         implements ConfigElement, TestBean, TestStateListener {
 
+    private static final long serialVersionUID = 1065500169997779419L;
 
     private String contextName;
     private String routeDefFile;
