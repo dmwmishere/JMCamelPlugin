@@ -94,7 +94,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">3</stringProp>
@@ -111,9 +111,10 @@
         </CounterConfig>
         <hashTree/>
         <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="true">
-          <stringProp name="body">test body counter=${cnt}</stringProp>
+          <stringProp name="body">{&quot;key&quot;:&quot;test body counter=${cnt}&quot;}</stringProp>
           <stringProp name="contextName">jm-camel-context-1</stringProp>
           <stringProp name="directName">direct:test</stringProp>
+          <stringProp name="converterClass">org.dmwm.jmeter.framework.converter.JsonConverter</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
@@ -127,10 +128,11 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="false">
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="true">
           <stringProp name="body">test body counter=${cnt}</stringProp>
           <stringProp name="contextName">jm-camel-context-2</stringProp>
           <stringProp name="directName">direct:test</stringProp>
+          <stringProp name="converterClass">None</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">

@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.jmeter.threads.JMeterContext;
+import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.framework.PicoRegistry;
 import org.picocontainer.MutablePicoContainer;
@@ -51,6 +52,18 @@ public class CamelContextUtils {
         PropertiesComponent pc = new PropertiesComponent();
         pc.setInitialProperties(properties);
         return pc;
+    }
+
+    public Converter initConverter(String converterClass){
+        Converter<?> converter = null;
+        try {
+            if(!converterClass.equals("None")) {
+                converter = (Converter) Class.forName(converterClass).newInstance();
+            }
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            log.error("Failed to create converter type of {}: {}", converterClass, e.getMessage());
+        }
+        return converter;
     }
 
     public PicoRegistry initRegistry() {

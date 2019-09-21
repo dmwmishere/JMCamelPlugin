@@ -23,6 +23,7 @@ dependencies {
     compile "org.apache.camel:camel-core:${camelVersion}"
     compile "org.picocontainer:picocontainer:2.15"
     compile "org.reflections:reflections:0.9.10"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.9.3"
 
     compileOnly "org.projectlombok:lombok:1.16.20"
     testCompile "junit:junit:4.12"
