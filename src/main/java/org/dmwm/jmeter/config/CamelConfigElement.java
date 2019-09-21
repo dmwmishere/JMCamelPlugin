@@ -1,15 +1,15 @@
 package org.dmwm.jmeter.config;
 
 import com.helger.commons.io.stream.StringInputStream;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
-import org.apache.jmeter.config.ConfigElement;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
-import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
@@ -24,8 +24,7 @@ import java.util.Collection;
 @Slf4j
 @Getter
 @Setter
-public class CamelConfigElement extends AbstractTestElement
-        implements ConfigElement, TestBean, TestStateListener {
+public class CamelConfigElement extends ConfigTestElement implements TestBean, TestStateListener {
 
     private static final long serialVersionUID = 1065500169997779419L;
 
@@ -34,6 +33,8 @@ public class CamelConfigElement extends AbstractTestElement
     private String routeXml;
     private Collection<RegistryTableElement> registryBeans;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private transient CamelContext cctx;
 
     public static CamelContext getContext(String contextName) throws CamelException {
@@ -51,15 +52,6 @@ public class CamelConfigElement extends AbstractTestElement
             }
         }
 
-    }
-
-    @Override
-    public void addConfigElement(ConfigElement config) {
-    }
-
-    @Override
-    public boolean expectsModification() {
-        return false;
     }
 
     @Override
