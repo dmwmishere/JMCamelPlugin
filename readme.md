@@ -28,9 +28,9 @@ Use "name" to refer your beans in route definition.
 1. Configuration:
  * JSR223 stuff to camel context
  * camel context bean - through jmeter variables
+ * configure exchange template (props and headers)
 
 2. Sampler:
-* body string to class converter
 
 3. Listener:
 * Mock listener
