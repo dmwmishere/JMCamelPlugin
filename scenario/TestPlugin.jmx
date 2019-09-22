@@ -69,7 +69,7 @@
         &lt;log message=&quot;TIMER TICK conf2!!!&quot; /&gt;
     &lt;/route&gt;
     &lt;route&gt;
-    		&lt;from uri=&quot;direct:test&quot; /&gt;
+    		&lt;from uri=&quot;direct:test2&quot; /&gt;
     		&lt;log message=&quot;DIRECT BODY: ${body}&quot;/&gt;
     		&lt;transform&gt;
     			&lt;simple&gt;response for ${body}-2&lt;/simple&gt;
@@ -115,6 +115,7 @@
           <stringProp name="contextName">jm-camel-context-1</stringProp>
           <stringProp name="directName">direct:test</stringProp>
           <stringProp name="converterClass">org.dmwm.jmeter.framework.converter.JsonConverter</stringProp>
+          <stringProp name="camelContextName">jm-camel-context-1</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
@@ -131,8 +132,9 @@
         <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="true">
           <stringProp name="body">test body counter=${cnt}</stringProp>
           <stringProp name="contextName">jm-camel-context-2</stringProp>
-          <stringProp name="directName">direct:test</stringProp>
+          <stringProp name="directName">direct:test2</stringProp>
           <stringProp name="converterClass">None</stringProp>
+          <stringProp name="camelContextName">jm-camel-context-2</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">

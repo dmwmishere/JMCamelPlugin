@@ -11,9 +11,9 @@ public class CamelSamplerBeanInfo extends BeanInfoSupport {
         super(CamelSampler.class);
 
         createPropertyGroup("samplerConfig", new String[]{
-                "contextName", "directName", "converterClass", "body"});
+                "camelContextName", "directName", "converterClass", "body"});
 
-        PropertyDescriptor p = property("contextName", TypeEditor.ComboStringEditor);
+        PropertyDescriptor p = property("camelContextName", TypeEditor.ComboStringEditor);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "jm-camel-context-1");
 

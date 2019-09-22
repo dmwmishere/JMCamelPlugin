@@ -25,7 +25,7 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
 
     private static final long serialVersionUID = 277235054922307347L;
 
-    private String contextName;
+    private String camelContextName;
     private String directName;
     private String body;
     private String converterClass;
@@ -46,8 +46,8 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
     @Override
     public SampleResult sample(Entry entry) {
         SampleResult res = new SampleResult();
-        log.debug("Send to {}:{} body: {}", contextName, directName, body);
-        res.setSampleLabel(getName() + "-" + contextName + "-" + directName);
+        log.debug("Send to {}:{} body: {}", camelContextName, directName, body);
+        res.setSampleLabel(getName() + "-" + camelContextName + "-" + directName);
         res.setSuccessful(true);
         res.setSamplerData(body);
         res.setDataType(SampleResult.TEXT);
@@ -58,7 +58,7 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
         try {
             if (firstSample) {
                 converter = CamelContextUtils.initConverter(converterClass);
-                producer = CamelConfigElement.getContext(contextName)
+                producer = CamelConfigElement.getContext(camelContextName)
                         .createFluentProducerTemplate().to(directName);
                 firstSample = false;
             }
