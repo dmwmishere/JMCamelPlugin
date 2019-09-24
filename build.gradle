@@ -6,9 +6,7 @@ plugins {
 group 'org.dmwm.jmeter'
 version '0.8'
 
-def jmeter_home = "$System.env.JMETER_HOME"
-
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -36,13 +34,33 @@ jar {
     from('src/main/java') {
         include '**/*.properties'
     }
-    from{
+    from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
 
+task runScenario(type: JavaExec) {
+    dependsOn classes
+    def jmeter_home_path = System.env.JMETER_HOME
+    sourceSets.main.resources.srcDir { 'src/main/java' }
+    main = "org.apache.jmeter.NewDriver"
+    workingDir = "$jmeter_home_path/bin"
+    doFirst {
+        classpath = files(
+                "$jmeter_home_path/lib/ext/*",
+                "$jmeter_home_path/lib/*",
+                "$jmeter_home_path/bin/ApacheJMeter.jar"
+        )
+        classpath += sourceSets.main.runtimeClasspath
+    }
+
+    jvmArgs "-DJMETER_HOME=$jmeter_home_path"
+
+    args "-t", "$projectDir/scenario/TestPlugin.jmx"
 }
 
 task runIt(dependsOn: jar) {
+    def jmeter_home = "$System.env.JMETER_HOME"
     doFirst {
         if (System.env.JMETER_HOME == null || System.env.JAVA_HOME == null) {
             throw new GradleException('Either JMETER_HOME or JAVA_HOME not specified!')
