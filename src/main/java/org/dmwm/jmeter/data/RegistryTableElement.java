@@ -4,6 +4,8 @@ import org.apache.jmeter.testelement.AbstractTestElement;
 
 public class RegistryTableElement extends AbstractTestElement {
 
+    private static final long serialVersionUID = 282040956479860029L;
+
     public static final String BEAN_NAME = "name";
 
     public static final String CLASS_NAME = "clazz";
