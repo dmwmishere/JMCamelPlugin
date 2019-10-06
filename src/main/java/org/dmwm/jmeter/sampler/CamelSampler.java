@@ -12,9 +12,11 @@ import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.dmwm.jmeter.config.CamelConfigElement;
+import org.dmwm.jmeter.data.ExchangeSettingPair;
 import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.util.CamelContextUtils;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,6 +31,8 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
     private String directName;
     private String body;
     private String converterClass;
+
+    private Collection<ExchangeSettingPair> exchangeHeaders;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -63,7 +67,19 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
                 firstSample = false;
             }
 
-            Exchange exchange = producer.withBody(Objects.isNull(converter) ? body : converter.convert(body)).send();
+            if (exchangeHeaders != null) {
+                exchangeHeaders.forEach(header -> {
+                            producer.withHeader(
+                                    header.getExchangeSettingName(),
+                                    header.getExchangeSettingValue()
+                            );
+                        }
+                );
+            }
+
+            Exchange exchange = producer
+                    .withBody(Objects.isNull(converter) ? body : converter.convert(body))
+                    .send();
 
             res.setRequestHeaders(exchange.getOut().getHeaders().toString());
             res.setResponseData(Optional.ofNullable(exchange.getIn().getBody())

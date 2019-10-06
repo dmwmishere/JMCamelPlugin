@@ -3,6 +3,9 @@ package org.dmwm.jmeter.data;
 import org.apache.jmeter.testelement.AbstractTestElement;
 
 public class ExchangeSettingPair extends AbstractTestElement {
+
+    private static final long serialVersionUID = 1965376937881090519L;
+
     public static final String EXCHANGE_SETTING_NAME = "exchangeSettingName";
 
     public static final String EXCHANGE_SETTING_VALUE = "exchangeSettingValue";

@@ -61,7 +61,7 @@ public class CamelContextUtils {
                 converter = (Converter) Class.forName(converterClass).newInstance();
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            log.error("Failed to create converter type of {}: {}", converterClass, e.getMessage());
+            log.error("Failed to create converter type of {} because {}: {}", converterClass, e.getClass().getSimpleName(), e.getMessage());
         }
         return converter;
     }

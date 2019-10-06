@@ -7,7 +7,6 @@ import org.apache.jmeter.testbeans.gui.TypeEditor;
 import org.dmwm.jmeter.data.RegistryTableElement;
 
 import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
 
 public class CamelConfigElementBeanInfo extends BeanInfoSupport {
 
@@ -52,8 +51,7 @@ public class CamelConfigElementBeanInfo extends BeanInfoSupport {
                         RegistryTableElement.CLASS_NAME,
                         RegistryTableElement.INSTANCE
                 });
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, new ArrayList<RegistryTableElement>());
+        p.setValue(NOT_UNDEFINED, Boolean.FALSE);
         p.setValue(MULTILINE, Boolean.TRUE);
     }
 }

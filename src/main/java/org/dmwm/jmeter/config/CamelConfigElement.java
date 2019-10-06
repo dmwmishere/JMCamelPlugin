@@ -61,9 +61,10 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
 
         PicoRegistry registry = CamelContextUtils.initRegistry();
 
-        registryBeans.forEach(element ->
-                CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
-
+        if(registryBeans != null) {
+            registryBeans.forEach(element ->
+                    CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
+        }
         JMeterVariables variables = getThreadContext().getVariables();
         if (variables.getObject(contextName) == null) {
             synchronized (this) {

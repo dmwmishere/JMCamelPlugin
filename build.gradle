@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.dmwm.jmeter'
-version '0.8'
+version '0.8.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -84,7 +84,7 @@ task runIt(dependsOn: jar) {
 }
 
 test {
-    exclude '**/*TestCamelConfig*'
+    exclude '**/*ScenarioTest*'
 }
 
 publishing {

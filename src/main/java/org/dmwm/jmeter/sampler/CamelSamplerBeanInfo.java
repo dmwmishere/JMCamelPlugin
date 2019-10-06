@@ -1,7 +1,9 @@
 package org.dmwm.jmeter.sampler;
 
 import org.apache.jmeter.testbeans.BeanInfoSupport;
+import org.apache.jmeter.testbeans.gui.TableEditor;
 import org.apache.jmeter.testbeans.gui.TypeEditor;
+import org.dmwm.jmeter.data.ExchangeSettingPair;
 
 import java.beans.PropertyDescriptor;
 
@@ -29,7 +31,29 @@ public class CamelSamplerBeanInfo extends BeanInfoSupport {
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "test body");
 
-    }
+        createPropertyGroup("exchangeConfig", new String[]{
+                "exchangeHeaders"
+        });
 
+        p = property("exchangeHeaders");
+        p.setPropertyEditorClass(TableEditor.class);
+        p.setValue(TableEditor.CLASSNAME, ExchangeSettingPair.class.getName());
+        p.setValue(TableEditor.HEADERS, new String[]{
+                "Property name",
+                "value"
+        });
+        p.setValue(TableEditor.OBJECT_PROPERTIES,
+                new String[]{
+                        ExchangeSettingPair.EXCHANGE_SETTING_NAME,
+                        ExchangeSettingPair.EXCHANGE_SETTING_VALUE
+                });
+
+        //FIXME: explore why IllegalArgumentException occures if this is true and according context config classes table is empty
+        //org.dmwm.jmeter.sampler.CamelSampler#setExchangeHeaders(String  )
+        //Caused by: java.lang.IllegalArgumentException: argument type mismatch
+        p.setValue(NOT_UNDEFINED, Boolean.FALSE);
+        p.setValue(MULTILINE, Boolean.TRUE);
+
+    }
 
 }

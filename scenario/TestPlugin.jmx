@@ -18,29 +18,6 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <org.dmwm.jmeter.config.ExchangeConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.ExchangeConfigElement" testname="Camel Exchange configuration" enabled="true">
-        <collectionProp name="exchangeHeaders">
-          <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
-            <stringProp name="exchangeSettingName">head111</stringProp>
-            <stringProp name="exchangeSettingValue">head111-value</stringProp>
-          </elementProp>
-          <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
-            <stringProp name="exchangeSettingName">head222</stringProp>
-            <stringProp name="exchangeSettingValue">head222-value</stringProp>
-          </elementProp>
-        </collectionProp>
-        <collectionProp name="exchangeProperties">
-          <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
-            <stringProp name="exchangeSettingName">prop111</stringProp>
-            <stringProp name="exchangeSettingValue">prop111-value</stringProp>
-          </elementProp>
-          <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
-            <stringProp name="exchangeSettingName">prop222</stringProp>
-            <stringProp name="exchangeSettingValue">prop222-value</stringProp>
-          </elementProp>
-        </collectionProp>
-      </org.dmwm.jmeter.config.ExchangeConfigElement>
-      <hashTree/>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="OtherUserVars" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="testPropertyVariable2" elementType="Argument">
@@ -63,9 +40,9 @@
     &lt;/route&gt;
     &lt;route&gt;
     		&lt;from uri=&quot;direct:test&quot; /&gt;
-    		&lt;!--log message=&quot;DIRECT BODY: ${body}&quot;/--&gt;
+    		&lt;log message=&quot;DIRECT BODY: ${body} ~ ${header.header1} ~ ${header.header2} ~ ${header.header3}&quot;/&gt;
     		&lt;transform&gt;
-    			&lt;simple&gt;response for ${body}&lt;/simple&gt;
+    			&lt;simple&gt;response for ${body}-${header.header1}-${header.header2} from context 2&lt;/simple&gt;
     		&lt;/transform&gt;
     		&lt;setHeader headerName=&quot;TestHeader&quot;&gt;
         		&lt;constant&gt;TEST+HEADER&lt;/constant&gt;
@@ -93,9 +70,9 @@
     &lt;/route&gt;
     &lt;route&gt;
     		&lt;from uri=&quot;direct:test2&quot; /&gt;
-    		&lt;log message=&quot;DIRECT BODY: ${body}&quot;/&gt;
+    		&lt;log message=&quot;DIRECT BODY: ${body} ~ ${header.header21}&quot;/&gt;
     		&lt;transform&gt;
-    			&lt;simple&gt;response for ${body}-2&lt;/simple&gt;
+    			&lt;simple&gt;response for ${body}-2-${header.header21} from context 2&lt;/simple&gt;
     		&lt;/transform&gt;
     		&lt;setHeader headerName=&quot;TestHeader&quot;&gt;
         		&lt;constant&gt;TEST+HEADER&lt;/constant&gt;
@@ -111,16 +88,36 @@
         <stringProp name="contextName">jm-camel-context-2</stringProp>
       </org.dmwm.jmeter.config.CamelConfigElement>
       <hashTree/>
+      <org.dmwm.jmeter.config.CamelConfigElement guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.config.CamelConfigElement" testname="CamelContext-3" enabled="true">
+        <boolProp name="startOnTestStart">true</boolProp>
+        <stringProp name="routeDefFile"></stringProp>
+        <stringProp name="routeXml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;routes xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
+    &lt;route&gt;
+    		&lt;from uri=&quot;direct:test3&quot; /&gt;
+    		&lt;log message=&quot;DIRECT BODY: ${body} ~ ${header.header21}&quot;/&gt;
+    		&lt;transform&gt;
+    			&lt;simple&gt;response for ${body}-3 from context 3&lt;/simple&gt;
+    		&lt;/transform&gt;
+    		&lt;setHeader headerName=&quot;TestHeader&quot;&gt;
+        		&lt;constant&gt;TEST+HEADER&lt;/constant&gt;
+    		&lt;/setHeader&gt;
+    &lt;/route&gt;
+&lt;/routes&gt;</stringProp>
+        <collectionProp name="registryBeans"/>
+        <stringProp name="contextName">jm-camel-context-3</stringProp>
+      </org.dmwm.jmeter.config.CamelConfigElement>
+      <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">3</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">2</stringProp>
+        <stringProp name="ThreadGroup.num_threads">3</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">3</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration">30</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
@@ -133,17 +130,31 @@
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="true">
-          <stringProp name="body">{&quot;key&quot;:&quot;test body counter=${cnt}&quot;}</stringProp>
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Sampler1" enabled="true">
+          <stringProp name="body">{&quot;sampleName&quot;:&quot;Sample1=${cnt}&quot;}</stringProp>
           <stringProp name="contextName">jm-camel-context-1</stringProp>
           <stringProp name="directName">direct:test</stringProp>
           <stringProp name="converterClass">org.dmwm.jmeter.framework.converter.JsonConverter</stringProp>
           <stringProp name="camelContextName">jm-camel-context-1</stringProp>
+          <collectionProp name="exchangeHeaders">
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header1</stringProp>
+              <stringProp name="exchangeSettingValue">counter-${cnt}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header2</stringProp>
+              <stringProp name="exchangeSettingValue">prop-${testPropertyVariable2}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header3</stringProp>
+              <stringProp name="exchangeSettingValue">const</stringProp>
+            </elementProp>
+          </collectionProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-1814707572">counter=${cnt}</stringProp>
+              <stringProp name="1914341924">Sample1=${cnt}&quot;\}-counter-${cnt}-prop-sample222</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
@@ -152,17 +163,23 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Camel Sampler" enabled="true">
-          <stringProp name="body">test body counter=${cnt}</stringProp>
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Sampler2" enabled="true">
+          <stringProp name="body">SAMPLE[Sample2]=${cnt}</stringProp>
           <stringProp name="contextName">jm-camel-context-2</stringProp>
           <stringProp name="directName">direct:test2</stringProp>
           <stringProp name="converterClass">None</stringProp>
           <stringProp name="camelContextName">jm-camel-context-2</stringProp>
+          <collectionProp name="exchangeHeaders">
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header21</stringProp>
+              <stringProp name="exchangeSettingValue">header21-${cnt}</stringProp>
+            </elementProp>
+          </collectionProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-177253071">counter=${cnt}-2</stringProp>
+              <stringProp name="627294594">\[Sample2\]=${cnt}-2-header21-${cnt}</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
@@ -171,15 +188,29 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="TEST2" enabled="true">
+          <stringProp name="body">SAMPLE[TEST2]-${cnt}</stringProp>
+          <stringProp name="contextName">jm-camel-context-2</stringProp>
+          <stringProp name="directName">direct:test3</stringProp>
+          <stringProp name="converterClass">None</stringProp>
+          <stringProp name="camelContextName">jm-camel-context-3</stringProp>
+          <collectionProp name="exchangeHeaders"/>
+        </org.dmwm.jmeter.sampler.CamelSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-1550242608">\[TEST2\]-${cnt}-3 from context 3</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="false">
           <stringProp name="ConstantTimer.delay">1000</stringProp>
         </ConstantTimer>
-        <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
-          <boolProp name="displayJMeterProperties">false</boolProp>
-          <boolProp name="displayJMeterVariables">true</boolProp>
-          <boolProp name="displaySystemProperties">false</boolProp>
-        </DebugSampler>
         <hashTree/>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="All samples" enabled="true">
