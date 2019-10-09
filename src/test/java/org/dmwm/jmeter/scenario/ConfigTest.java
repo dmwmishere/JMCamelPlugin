@@ -20,7 +20,7 @@ public class ConfigTest {
     private JMeterVariables vars = new JMeterVariables();
     private JMeterContext jmCtx;
 
-    public ConfigTest(){
+    public ConfigTest() {
         JMeterUtils.loadJMeterProperties(
                 ClassLoader.getSystemResource("jmeter.properties").getFile());
         JMeterUtils.initLocale();
@@ -33,24 +33,24 @@ public class ConfigTest {
     }
 
     @Test
-    public void test_00_0_config_start_stop() throws Exception {
+    public void test_00_0_config_start_stop() {
 
         CamelConfigElement cce = new CamelConfigElement();
         cce.setProperty("contextName", CONTEXT_NAME);
 
         cce.setProperty("routeXml",
                 "<routes xmlns=\"http://camel.apache.org/schema/spring\">" +
-                "    <route>" +
-                "        <from uri=\"direct:test\"/>" +
-                "        <log message=\"received ${in.body}\" />" +
-                "    </route>" +
-                "</routes>");
+                        "    <route>" +
+                        "        <from uri=\"direct:test\"/>" +
+                        "        <log message=\"received ${in.body}\" />" +
+                        "    </route>" +
+                        "</routes>");
 
         cce.setThreadContext(jmCtx);
 
         cce.testStarted();
 
-        CamelContext cctx = (CamelContext)vars.getObject(CONTEXT_NAME);
+        CamelContext cctx = (CamelContext) vars.getObject(CONTEXT_NAME);
 
         assertThat(cctx.getStatus().isStarted(), equalTo(true));
 
@@ -60,7 +60,7 @@ public class ConfigTest {
     }
 
     @Test
-    public void test_01_0_load_scanned_bean() throws Exception {
+    public void test_01_0_load_scanned_bean() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.test");
         CamelConfigElement cce = new CamelConfigElement();
         cce.setProperty("contextName", CONTEXT_NAME);
@@ -70,7 +70,7 @@ public class ConfigTest {
 
         cce.testStarted();
 
-        CamelContext cctx = (CamelContext)vars.getObject(CONTEXT_NAME);
+        CamelContext cctx = (CamelContext) vars.getObject(CONTEXT_NAME);
 
         assertThat(cctx.getRegistry().lookupByName("test-bean"), notNullValue());
 
