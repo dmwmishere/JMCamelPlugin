@@ -9,6 +9,7 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.framework.ContextBuilder;
 import org.dmwm.jmeter.sampler.CamelSampler;
+import org.dmwm.jmeter.util.Serializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,7 @@ public class SampleTest {
         sampler.setDirectName("direct:test");
         sampler.setBody("test body string");
         sampler.setConverterClass("None");
+        sampler.setSaveResultAs(true);
 
         sampler.threadStarted();
 
@@ -84,6 +86,7 @@ public class SampleTest {
         sampler.setDirectName("direct:test");
         sampler.setBody("test body string");
         sampler.setConverterClass("org.dmwm.jmeter.test.SamplerTestConverter");
+        sampler.setSaveResultAs(true);
 
         sampler.threadStarted();
 
@@ -110,10 +113,31 @@ public class SampleTest {
 
         srv.shutdown();
 
-        for(Future<List<Integer>> future : futures){
+        for (Future<List<Integer>> future : futures) {
             assertThat(future.get(), not(hasItems(0)));
         }
 
+    }
+
+    @Test
+    public void test_03_0_save_as() throws Exception {
+        CamelSampler sampler = new CamelSampler();
+
+        sampler.setCamelContextName(CONTEXT_NAME);
+        sampler.setDirectName("direct:test");
+        sampler.setBody("test body bytes");
+        sampler.setConverterClass("org.dmwm.jmeter.test.SamplerTestConverter");
+        sampler.setSaveResultAs(false);
+
+        sampler.threadStarted();
+
+        SampleResult res = sampler.sample(new Entry());
+
+        Object value = Serializer.deserialize(res.getResponseData());
+
+        assertThat(value, instanceOf(String.class));
+
+        assertThat(value.toString(), equalTo("rs-test-converted-test body bytes"));
     }
 
     class TestThreadSampler implements Callable<List<Integer>> {
@@ -128,6 +152,7 @@ public class SampleTest {
             sampler.setDirectName(directName);
             sampler.setConverterClass(converter);
             sampler.threadStarted();
+            sampler.setSaveResultAs(true);
             this.iterationCount = iterationCount;
 
         }

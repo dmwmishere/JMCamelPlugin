@@ -13,7 +13,7 @@ public class CamelSamplerBeanInfo extends BeanInfoSupport {
         super(CamelSampler.class);
 
         createPropertyGroup("samplerConfig", new String[]{
-                "camelContextName", "directName", "converterClass", "body"});
+                "camelContextName", "directName", "converterClass", "saveResultAs", "body"});
 
         PropertyDescriptor p = property("camelContextName", TypeEditor.ComboStringEditor);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
@@ -26,6 +26,10 @@ public class CamelSamplerBeanInfo extends BeanInfoSupport {
         p = property("converterClass", TypeEditor.ComboStringEditor);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "None");
+
+        p = property("saveResultAs");
+        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+        p.setValue(DEFAULT, false);
 
         p = property("body", TypeEditor.TextAreaEditor);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);

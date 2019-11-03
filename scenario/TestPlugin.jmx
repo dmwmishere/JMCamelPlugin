@@ -150,11 +150,12 @@
               <stringProp name="exchangeSettingValue">const</stringProp>
             </elementProp>
           </collectionProp>
+          <boolProp name="saveResultAs">true</boolProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="1914341924">Sample1=${cnt}&quot;\}-counter-${cnt}-prop-sample222</stringProp>
+              <stringProp name="1497135518">Sample1=${cnt}}-counter-${cnt}-prop-sample222</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
@@ -175,6 +176,7 @@
               <stringProp name="exchangeSettingValue">header21-${cnt}</stringProp>
             </elementProp>
           </collectionProp>
+          <boolProp name="saveResultAs">false</boolProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
@@ -195,6 +197,7 @@
           <stringProp name="converterClass">None</stringProp>
           <stringProp name="camelContextName">jm-camel-context-3</stringProp>
           <collectionProp name="exchangeHeaders"/>
+          <boolProp name="saveResultAs">false</boolProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">

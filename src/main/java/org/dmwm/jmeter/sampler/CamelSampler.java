@@ -15,10 +15,10 @@ import org.dmwm.jmeter.config.CamelConfigElement;
 import org.dmwm.jmeter.data.ExchangeSettingPair;
 import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.util.CamelContextUtils;
+import org.dmwm.jmeter.util.Serializer;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @Getter
@@ -31,6 +31,7 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
     private String directName;
     private String body;
     private String converterClass;
+    private Boolean saveResultAs;
 
     private Collection<ExchangeSettingPair> exchangeHeaders;
 
@@ -41,7 +42,6 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private transient boolean firstSample;
-
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -54,8 +54,6 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
         res.setSampleLabel(getName() + "-" + camelContextName + "-" + directName);
         res.setSuccessful(true);
         res.setSamplerData(body);
-        res.setDataType(SampleResult.TEXT);
-        res.setContentType("text/plain");
         res.setResponseMessageOK();
         res.setResponseCodeOK();
         res.sampleStart();
@@ -82,13 +80,21 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
                     .send();
 
             res.setRequestHeaders(exchange.getOut().getHeaders().toString());
-            res.setResponseData(Optional.ofNullable(exchange.getIn().getBody())
-                    .orElse("null").toString());
+            Object body = exchange.getIn().getBody();
+            if (saveResultAs) {
+                res.setDataType(SampleResult.TEXT);
+                res.setContentType("text/plain");
+                res.setResponseData(body.toString().getBytes(res.getDataEncodingWithDefault()));
+            } else {
+                res.setDataType(SampleResult.BINARY);
+                res.setResponseData(Serializer.serialize(body));
+            }
+
             res.setResponseHeaders(exchange.getIn().getHeaders().toString());
 
         } catch (Exception e) {
-            e.printStackTrace();
-            res.setResponseData(Optional.ofNullable(e.getMessage()).orElse("no message due to exception: " + e.getMessage()).getBytes());
+            res.setDataType(SampleResult.TEXT);
+            res.setResponseData((e.getClass().getSimpleName() + ":" + e.getMessage()).getBytes());
             res.setSuccessful(false);
         }
         res.sampleEnd();
