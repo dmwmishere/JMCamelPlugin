@@ -41,12 +41,10 @@
     &lt;route&gt;
     		&lt;from uri=&quot;direct:test&quot; /&gt;
     		&lt;log message=&quot;DIRECT BODY: ${body} ~ ${header.header1} ~ ${header.header2} ~ ${header.header3}&quot;/&gt;
-    		&lt;transform&gt;
-    			&lt;simple&gt;response for ${body}-${header.header1}-${header.header2} from context 2&lt;/simple&gt;
-    		&lt;/transform&gt;
     		&lt;setHeader headerName=&quot;TestHeader&quot;&gt;
         		&lt;constant&gt;TEST+HEADER&lt;/constant&gt;
     		&lt;/setHeader&gt;
+    		&lt;process ref=&quot;test-map-proc&quot; /&gt;
     &lt;/route&gt;
 &lt;/routes&gt;</stringProp>
         <collectionProp name="registryBeans">
@@ -150,18 +148,108 @@
               <stringProp name="exchangeSettingValue">const</stringProp>
             </elementProp>
           </collectionProp>
-          <boolProp name="saveResultAs">true</boolProp>
+          <stringProp name="saveResultAs">STRING</stringProp>
+          <stringProp name="resultName">sampler1-rs</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="1497135518">Sample1=${cnt}}-counter-${cnt}-prop-sample222</stringProp>
+              <stringProp name="-314501459">response=jm-camel-context-1-counter-${cnt}-prop-sample222}</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Sampler1.1" enabled="true">
+          <stringProp name="body">{&quot;sampleName&quot;:&quot;Sample1=${cnt}&quot;}</stringProp>
+          <stringProp name="contextName">jm-camel-context-1</stringProp>
+          <stringProp name="directName">direct:test</stringProp>
+          <stringProp name="converterClass">org.dmwm.jmeter.framework.converter.JsonConverter</stringProp>
+          <stringProp name="camelContextName">jm-camel-context-1</stringProp>
+          <collectionProp name="exchangeHeaders">
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header1</stringProp>
+              <stringProp name="exchangeSettingValue">counter-${cnt}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header2</stringProp>
+              <stringProp name="exchangeSettingValue">prop-${testPropertyVariable2}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="org.dmwm.jmeter.data.ExchangeSettingPair">
+              <stringProp name="exchangeSettingName">header3</stringProp>
+              <stringProp name="exchangeSettingValue">const</stringProp>
+            </elementProp>
+          </collectionProp>
+          <stringProp name="saveResultAs">OBJECT</stringProp>
+          <stringProp name="resultName">sample1.1-rs</stringProp>
+        </org.dmwm.jmeter.sampler.CamelSampler>
+        <hashTree>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">Map obj = (Map)vars.getObject(&quot;sample1.1-rs&quot;)
+
+//OUT.println(&quot;OUTPUT = &quot; + obj.toString() + &quot; type of &quot; + obj.getClass().getName())
+
+int cnt = Integer.parseInt(vars.getObject(&quot;cnt&quot;))
+
+final String expected = &quot;jm-camel-context-1-counter-&quot; + cnt + &quot;-prop-sample222&quot;
+
+if (obj.containsKey(&quot;response&quot;)) {
+    if (!obj.get(&quot;response&quot;).toString().equals(expected)) {
+        AssertionResult.setFailureMessage(&quot;invalid response &quot; + obj.get(&quot;response&quot;) + &quot; but expected &quot; + expected)
+        AssertionResult.setFailure(true)
+    }
+} else {
+    AssertionResult.setFailureMessage(&quot;no response field &quot; + obj.toString())
+    AssertionResult.setFailure(true)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+        <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Sampler1.2" enabled="false">
+          <stringProp name="body">{&quot;sampleName&quot;:&quot;Sample1=${cnt}&quot;}</stringProp>
+          <stringProp name="contextName">jm-camel-context-1</stringProp>
+          <stringProp name="directName">direct:test</stringProp>
+          <stringProp name="converterClass">org.dmwm.jmeter.framework.converter.JsonConverter</stringProp>
+          <stringProp name="camelContextName">jm-camel-context-1</stringProp>
+          <collectionProp name="exchangeHeaders"/>
+          <stringProp name="saveResultAs">EXCHANGE</stringProp>
+          <stringProp name="resultName">sample1.2-rs</stringProp>
+        </org.dmwm.jmeter.sampler.CamelSampler>
+        <hashTree>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import org.apache.camel.Exchange
+
+Exchange exc = (Exchange)vars.getObject(&quot;sample1.2-rs&quot;)
+
+Map obj = exc.getIn().getBody(Map.class)
+
+//OUT.println(&quot;OUTPUT = &quot; + obj.toString() + &quot; type of &quot; + obj.getClass().getName())
+
+int cnt = Integer.parseInt(vars.getObject(&quot;cnt&quot;))
+
+final String expected = &quot;jm-camel-context-1-counter-&quot; + cnt + &quot;-prop-sample222&quot;
+
+if (obj.containsKey(&quot;response&quot;)) {
+    if (!obj.get(&quot;response&quot;).toString().equals(expected)) {
+        AssertionResult.setFailureMessage(&quot;invalid response &quot; + obj.get(&quot;response&quot;) + &quot; but expected &quot; + expected)
+        AssertionResult.setFailure(true)
+    }
+} else {
+    AssertionResult.setFailureMessage(&quot;no response field &quot; + obj.toString())
+    AssertionResult.setFailure(true)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Assertion>
           <hashTree/>
         </hashTree>
         <org.dmwm.jmeter.sampler.CamelSampler guiclass="TestBeanGUI" testclass="org.dmwm.jmeter.sampler.CamelSampler" testname="Sampler2" enabled="true">
@@ -176,7 +264,8 @@
               <stringProp name="exchangeSettingValue">header21-${cnt}</stringProp>
             </elementProp>
           </collectionProp>
-          <boolProp name="saveResultAs">false</boolProp>
+          <stringProp name="saveResultAs">STRING</stringProp>
+          <stringProp name="resultName">sampler2-rs</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">
@@ -197,7 +286,8 @@
           <stringProp name="converterClass">None</stringProp>
           <stringProp name="camelContextName">jm-camel-context-3</stringProp>
           <collectionProp name="exchangeHeaders"/>
-          <boolProp name="saveResultAs">false</boolProp>
+          <stringProp name="saveResultAs">STRING</stringProp>
+          <stringProp name="resultName">test-rs</stringProp>
         </org.dmwm.jmeter.sampler.CamelSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert counter" enabled="true">

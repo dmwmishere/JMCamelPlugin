@@ -1,6 +1,7 @@
 package org.dmwm.jmeter.scenario;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
@@ -9,7 +10,6 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.framework.ContextBuilder;
 import org.dmwm.jmeter.sampler.CamelSampler;
-import org.dmwm.jmeter.util.Serializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +68,8 @@ public class SampleTest {
         sampler.setDirectName("direct:test");
         sampler.setBody("test body string");
         sampler.setConverterClass("None");
-        sampler.setSaveResultAs(true);
+        sampler.setResultName("");
+        sampler.setSaveResultAs("STRING");
 
         sampler.threadStarted();
 
@@ -86,7 +87,8 @@ public class SampleTest {
         sampler.setDirectName("direct:test");
         sampler.setBody("test body string");
         sampler.setConverterClass("org.dmwm.jmeter.test.SamplerTestConverter");
-        sampler.setSaveResultAs(true);
+        sampler.setResultName("");
+        sampler.setSaveResultAs("STRING");
 
         sampler.threadStarted();
 
@@ -120,24 +122,47 @@ public class SampleTest {
     }
 
     @Test
-    public void test_03_0_save_as() throws Exception {
+    public void test_03_0_save_as_object() {
         CamelSampler sampler = new CamelSampler();
 
         sampler.setCamelContextName(CONTEXT_NAME);
         sampler.setDirectName("direct:test");
         sampler.setBody("test body bytes");
         sampler.setConverterClass("org.dmwm.jmeter.test.SamplerTestConverter");
-        sampler.setSaveResultAs(false);
+        sampler.setResultName("resultAsObject");
+        sampler.setSaveResultAs("OBJECT");
 
         sampler.threadStarted();
 
         SampleResult res = sampler.sample(new Entry());
 
-        Object value = Serializer.deserialize(res.getResponseData());
+        Object value = sampler.getThreadContext().getVariables().getObject("resultAsObject");
 
         assertThat(value, instanceOf(String.class));
 
         assertThat(value.toString(), equalTo("rs-test-converted-test body bytes"));
+    }
+
+    @Test
+    public void test_03_1_save_exchange() {
+        CamelSampler sampler = new CamelSampler();
+
+        sampler.setCamelContextName(CONTEXT_NAME);
+        sampler.setDirectName("direct:test");
+        sampler.setBody("test body bytes");
+        sampler.setConverterClass("org.dmwm.jmeter.test.SamplerTestConverter");
+        sampler.setResultName("resultAsObject");
+        sampler.setSaveResultAs("EXCHANGE");
+
+        sampler.threadStarted();
+
+        SampleResult res = sampler.sample(new Entry());
+
+        Object value = sampler.getThreadContext().getVariables().getObject("resultAsObject");
+
+        assertThat(value, instanceOf(Exchange.class));
+
+        assertThat(((Exchange)value).getIn().getBody(String.class), equalTo("rs-test-converted-test body bytes"));
     }
 
     class TestThreadSampler implements Callable<List<Integer>> {
@@ -151,8 +176,9 @@ public class SampleTest {
             sampler.setCamelContextName(contextName);
             sampler.setDirectName(directName);
             sampler.setConverterClass(converter);
+            sampler.setResultName("");
+            sampler.setSaveResultAs("STRING");
             sampler.threadStarted();
-            sampler.setSaveResultAs(true);
             this.iterationCount = iterationCount;
 
         }

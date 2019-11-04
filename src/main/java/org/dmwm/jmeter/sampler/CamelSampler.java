@@ -11,12 +11,13 @@ import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testelement.ThreadListener;
+import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.config.CamelConfigElement;
 import org.dmwm.jmeter.data.ExchangeSettingPair;
 import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.util.CamelContextUtils;
-import org.dmwm.jmeter.util.Serializer;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -27,11 +28,16 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
 
     private static final long serialVersionUID = 277235054922307347L;
 
+    static final String SAVE_AS_STRING = "STRING";
+    static final String SAVE_AS_OBJECT = "OBJECT";
+    static final String SAVE_EXCHANGE = "EXCHANGE";
+
     private String camelContextName;
     private String directName;
     private String body;
     private String converterClass;
-    private Boolean saveResultAs;
+    private String saveResultAs;
+    private String resultName;
 
     private Collection<ExchangeSettingPair> exchangeHeaders;
 
@@ -79,17 +85,10 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
                     .withBody(Objects.isNull(converter) ? body : converter.convert(body))
                     .send();
 
+            res.setDataType(SampleResult.TEXT);
+            res.setContentType("text/plain");
+            res.setResponseData(saveResults(exchange));
             res.setRequestHeaders(exchange.getOut().getHeaders().toString());
-            Object body = exchange.getIn().getBody();
-            if (saveResultAs) {
-                res.setDataType(SampleResult.TEXT);
-                res.setContentType("text/plain");
-                res.setResponseData(body.toString().getBytes(res.getDataEncodingWithDefault()));
-            } else {
-                res.setDataType(SampleResult.BINARY);
-                res.setResponseData(Serializer.serialize(body));
-            }
-
             res.setResponseHeaders(exchange.getIn().getHeaders().toString());
 
         } catch (Exception e) {
@@ -99,6 +98,23 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
         }
         res.sampleEnd();
         return res;
+    }
+
+    private byte[] saveResults(Exchange exchange) {
+
+        Object body = exchange.getIn().getBody();
+
+        if (!resultName.isEmpty()) {
+            JMeterVariables vars = getThreadContext().getVariables();
+            if (saveResultAs.equals(SAVE_AS_STRING)) {
+                vars.putObject(resultName, body.toString());
+            } else if (saveResultAs.equals(SAVE_AS_OBJECT)) {
+                vars.putObject(resultName, body);
+            } else if (saveResultAs.equals(SAVE_EXCHANGE)) {
+                vars.putObject(resultName, exchange);
+            }
+        }
+        return body.toString().getBytes(Charset.defaultCharset());
     }
 
     @Override
