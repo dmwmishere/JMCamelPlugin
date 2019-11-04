@@ -13,6 +13,30 @@ use of camel context within jmeter tests
 # Usage
 See scenario/TestPlugin.jmx for usage examples
 
+## Elements
+### 1. CamelConfigurationElement
+Allows configure Camel context with XML format. Plugin will start context at scenario start and gracefully stop it on scenario end.
+Multiple contexts are allowed within one thread use unique name for each of context.
+
+### 2. CamelSampler
+Allows to configure and send exchange before directly sand into camel endpoint.
+Only "direct" endpoints supported.
+
+Properties:
+
+1. _Context name_ - name of Camel context specified in configuration element
+2. _Direct endpoint_ name - name of direct endpoint available within specified context
+3. _Converter class_ - class which implements Converter interface to convert string before send into endpoint
+4. _Result variable name_ - if not empty, sampler will save result into thread variable
+5. Save result as:
+* _STRING_ - calls toString() on exchange body then saves into variable
+* _OBJECT_ - saves exchange body as is
+* _EXCHANGE_ - save whole exchange into thread variable
+6. Body to send - string representation of message
+7. Exchange headers - header map to put into exchange before send
+
+
+### Access Context and SampleResults
 You can access to your CamelContext through JSR223Sampler:
 ```groovy
 ((org.apache.camel.CamelContext)vars.getObject("jm-camel-context-1"))
@@ -21,6 +45,12 @@ You can access to your CamelContext through JSR223Sampler:
 .withBody("from jsr script")
 .send()
 ```
+
+When result saved as Object or Exchange you can access it within JSR223Assertion:
+```groovy
+vars.getObject("<VARIABLE NAME>")
+```
+
 
 ## Writing custom extensions
 Add dependency to your project:
