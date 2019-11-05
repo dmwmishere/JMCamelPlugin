@@ -72,13 +72,10 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
             }
 
             if (exchangeHeaders != null) {
-                exchangeHeaders.forEach(header -> {
-                            producer.withHeader(
-                                    header.getExchangeSettingName(),
-                                    header.getExchangeSettingValue()
-                            );
-                        }
-                );
+                exchangeHeaders.forEach(header -> producer.withHeader(
+                        header.getExchangeSettingName(),
+                        header.getExchangeSettingValue()
+                ));
             }
 
             Exchange exchange = producer
@@ -90,10 +87,16 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
             res.setResponseData(saveResults(exchange));
             res.setRequestHeaders(exchange.getOut().getHeaders().toString());
             res.setResponseHeaders(exchange.getIn().getHeaders().toString());
-
+            if (exchange.getException() != null) {
+                Exception exception = exchange.getException();
+                res.setResponseCode("500");
+                res.setResponseMessage(exception.getClass().getSimpleName() + ":" + exception.getMessage());
+                res.setSuccessful(false);
+            }
         } catch (Exception e) {
             res.setDataType(SampleResult.TEXT);
             res.setResponseData((e.getClass().getSimpleName() + ":" + e.getMessage()).getBytes());
+            res.setResponseCode("500");
             res.setSuccessful(false);
         }
         res.sampleEnd();
