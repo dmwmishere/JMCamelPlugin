@@ -18,6 +18,7 @@ import org.dmwm.jmeter.framework.ContextBuilder;
 import org.dmwm.jmeter.framework.PicoRegistry;
 import org.dmwm.jmeter.util.CamelContextUtils;
 
+import java.io.FileInputStream;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
@@ -61,7 +62,7 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
 
         PicoRegistry registry = CamelContextUtils.initRegistry();
 
-        if(registryBeans != null) {
+        if (registryBeans != null) {
             registryBeans.forEach(element ->
                     CamelContextUtils.initBean(element.getName(), element.getClazz(), registry));
         }
@@ -74,7 +75,9 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
                             .setName(contextName)
                             .setRegistry(registry)
                             .setProperties(CamelContextUtils.initProperties(getThreadContext()))
-                            .addRoutes(new StringInputStream(routeXml, Charset.defaultCharset()))
+                            .addRoutes(routeDefFile.isEmpty() ?
+                                    new StringInputStream(routeXml, Charset.defaultCharset()) :
+                                    new FileInputStream(routeDefFile))
                             .build();
                     cctx.start();
                     variables.putObject(contextName, cctx);
