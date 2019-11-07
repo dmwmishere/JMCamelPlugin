@@ -56,12 +56,9 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
     @Override
     public SampleResult sample(Entry entry) {
         SampleResult res = new SampleResult();
-        log.debug("Send to {}:{} body: {}", camelContextName, directName, body);
-        res.setSampleLabel(getName() + "-" + camelContextName + "-" + directName);
-        res.setSuccessful(true);
+        res.setSampleLabel(getName());
+        res.setResponseOK();
         res.setSamplerData(body);
-        res.setResponseMessageOK();
-        res.setResponseCodeOK();
         res.sampleStart();
         try {
             if (firstSample) {
