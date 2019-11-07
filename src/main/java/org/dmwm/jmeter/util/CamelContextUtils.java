@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.jmeter.threads.JMeterContext;
+import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.framework.PicoRegistry;
@@ -66,7 +67,7 @@ public class CamelContextUtils {
         return converter;
     }
 
-    public PicoRegistry initRegistry() {
+    public PicoRegistry initRegistry(JMeterVariables jmvars) {
         String [] classPaths = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
         Reflections refl = new Reflections(classPaths,
                 new MethodAnnotationsScanner(),
@@ -76,6 +77,7 @@ public class CamelContextUtils {
         Set<Class<?>> classes = refl.getTypesAnnotatedWith(JCBean.class);
         log.info("Found classes to add to camel context: {} from {}", classes, classPaths);
         PicoRegistry registry = new PicoRegistry();
+        registry.addComponent("jmvars", jmvars);
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
 
         Map<Class<?>, List<Method>> classMethods = refl.getMethodsAnnotatedWith(JCBean.class)

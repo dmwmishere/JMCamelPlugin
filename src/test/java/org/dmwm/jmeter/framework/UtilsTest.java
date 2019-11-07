@@ -1,5 +1,6 @@
 package org.dmwm.jmeter.framework;
 
+import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.framework.testdata.D;
 import org.dmwm.jmeter.util.CamelContextUtils;
 import org.junit.Before;
@@ -11,6 +12,8 @@ import static org.hamcrest.Matchers.*;
 
 public class UtilsTest {
 
+    JMeterVariables vars = new JMeterVariables();
+
     @Before
     public void init(){
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.testdata");
@@ -18,7 +21,7 @@ public class UtilsTest {
 
     @Test
     public void test_00_0_registry_type_beans() {
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
 
         assertThat(registry.lookup("AA"), notNullValue());
         assertThat(registry.lookup("DD"), notNullValue());
@@ -27,7 +30,7 @@ public class UtilsTest {
 
     @Test
     public void test_00_1_registry_method_beans() {
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
 
         assertThat(registry.lookup("AA-m"), notNullValue());
         assertThat((Map<String, Integer>)registry.lookupByNameAndType("M-map", Map.class)
@@ -36,7 +39,7 @@ public class UtilsTest {
 
     @Test
     public void test_01_0_single_package() {
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
 
         assertThat(registry.lookup("NN"), nullValue());
     }
@@ -44,7 +47,7 @@ public class UtilsTest {
     @Test
     public void test_01_2_multiple_packages() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.testdata:org.dmwm.jmeter.framework.secondpackage");
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
 
         assertThat(registry.lookup("NN"), notNullValue());
         assertThat(registry.lookup("NN-m"), notNullValue());
@@ -54,7 +57,7 @@ public class UtilsTest {
     @Test
     public void test_02_0_single_class() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.testdata.A:org.dmwm.jmeter.framework.testdata.B");
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
         assertThat(registry.lookup("BB"), notNullValue());
         assertThat(registry.lookup("DD"), nullValue());
     }
@@ -62,13 +65,21 @@ public class UtilsTest {
     @Test(expected = RuntimeException.class)
     public void test_02_1_invalid_config_constructor() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.invalid.InvalidConfigConstructor");
-        CamelContextUtils.initRegistry();
+        CamelContextUtils.initRegistry(vars);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void test_02_2_invalid_config_method() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.invalid.InvalidConfigMethod");
-        CamelContextUtils.initRegistry();
+        CamelContextUtils.initRegistry(vars);
+    }
+
+    @Test
+    public void test_03_0_vars_injection() {
+        vars.put("test-variable", "qwertyy");
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
+        assertThat(registry.findByTypeWithName(JMeterVariables.class).get("jmvars").get("test-variable"), equalTo("qwertyy"));
+        System.out.println("VARS = " + registry.findByTypeWithName(JMeterVariables.class).get("jmvars").get("test-variable"));
     }
 
 }

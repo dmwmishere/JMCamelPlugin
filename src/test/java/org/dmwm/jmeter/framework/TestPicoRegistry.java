@@ -17,6 +17,8 @@ public class TestPicoRegistry {
                     .put("BB", B.class)
                     .put("CC", C.class)
                     .put("DD", D.class)
+                    .put("EE", E.class)
+                    .put("FF", F.class)
                     .build();
     private PicoRegistry registry;
 
@@ -97,6 +99,20 @@ public class TestPicoRegistry {
                 instanceOf(C.class), instanceOf(D.class)));
 
         assertThat(registry.findByType(ImmutableMap.class).size(), equalTo(0));
+
+    }
+
+    @Test
+    public void test_01_0_injection_types() {
+
+        System.out.println(registry.lookupByType(F.class));
+        System.out.println(registry.lookupByType(E.class));
+
+        assertThat(registry.findByType(E.class), contains(instanceOf(E.class)));
+        assertThat(registry.lookupByNameAndType("EE", E.class).getB(), is(notNullValue()));
+        assertThat(registry.findByType(F.class), contains(instanceOf(F.class)));
+        assertThat(registry.lookupByNameAndType("FF", F.class).getA(), is(notNullValue()));
+        assertThat(registry.lookupByNameAndType("FF", F.class).getE(), is(notNullValue()));
 
     }
 

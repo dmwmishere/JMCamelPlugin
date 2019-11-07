@@ -25,6 +25,11 @@
             <stringProp name="Argument.value">sample222</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="picoProp" elementType="Argument">
+            <stringProp name="Argument.name">picoProp</stringProp>
+            <stringProp name="Argument.value">property injection</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -62,7 +67,7 @@
         <stringProp name="routeXml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;routes xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
     &lt;route autoStartup=&quot;true&quot;&gt;
-        &lt;from uri=&quot;timer:qwerty?delay=1000&amp;amp;repeatCount=0&quot;/&gt;
+        &lt;from uri=&quot;timer:qwerty?delay=1&amp;amp;repeatCount=0&quot;/&gt;
         &lt;bean ref=&quot;test2&quot; method=&quot;printStr&quot;/&gt;
         &lt;log message=&quot;TIMER TICK conf2!!!&quot; /&gt;
     &lt;/route&gt;

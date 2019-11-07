@@ -60,7 +60,7 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
         this.setRunningVersion(true);
         TestBeanHelper.prepare(this);
 
-        PicoRegistry registry = CamelContextUtils.initRegistry();
+        PicoRegistry registry = CamelContextUtils.initRegistry(getThreadContext().getVariables());
 
         if (registryBeans != null) {
             registryBeans.forEach(element ->

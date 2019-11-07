@@ -56,7 +56,7 @@ public class Main {
         return ContextBuilder.builder()
                 .setName(properties.getProperty("jc_context_name", "jmeter-camel-context"))
                 .setProperties(props)
-                .setRegistry(CamelContextUtils.initRegistry())
+                .setRegistry(CamelContextUtils.initRegistry(null))
                 .addRoutes(routeXml == null
                         ? new StringInputStream("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<routes xmlns=\"http://camel.apache.org/schema/spring\">\n" +
