@@ -62,16 +62,26 @@ public class UtilsTest {
         assertThat(registry.lookup("DD"), nullValue());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void test_02_1_invalid_config_constructor() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.invalid.InvalidConfigConstructor");
-        CamelContextUtils.initRegistry(vars);
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
+        assertThat(registry.lookup("Invalid-constructor"), nullValue());
+
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void test_02_2_invalid_config_method() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.invalid.InvalidConfigMethod");
-        CamelContextUtils.initRegistry(vars);
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
+        assertThat(registry.lookup("invalid-method"), nullValue());
+    }
+
+    @Test
+    public void test_02_3_bean_exception() throws Exception {
+        System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.invalid.ExceptionInMethodCall");
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
+        assertThat(registry.lookup("exception-bean"), nullValue());
     }
 
     @Test

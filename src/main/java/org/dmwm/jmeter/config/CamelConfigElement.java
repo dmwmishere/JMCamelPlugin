@@ -83,7 +83,7 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
                     variables.putObject(contextName, cctx);
                 } catch (Exception e) {
                     log.error("Failed to create camel configuration for " + this.getName() +
-                            ": " + e.getClass() + " - " + e.getMessage());
+                            ": " + e.getClass() + " - " + e.getMessage(), e);
                 }
             }
         } else {

@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.dmwm.jmeter.framework.converter.Converter;
 import org.dmwm.jmeter.framework.JCBean;
 import org.dmwm.jmeter.framework.PicoRegistry;
+import org.dmwm.jmeter.framework.converter.Converter;
 import org.picocontainer.MutablePicoContainer;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -55,10 +55,10 @@ public class CamelContextUtils {
         return pc;
     }
 
-    public Converter initConverter(String converterClass){
+    public Converter initConverter(String converterClass) {
         Converter<?> converter = null;
         try {
-            if(!converterClass.equals("None")) {
+            if (!converterClass.equals("None")) {
                 converter = (Converter) Class.forName(converterClass).newInstance();
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -68,7 +68,7 @@ public class CamelContextUtils {
     }
 
     public PicoRegistry initRegistry(JMeterVariables jmvars) {
-        String [] classPaths = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
+        String[] classPaths = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
         Reflections refl = new Reflections(classPaths,
                 new MethodAnnotationsScanner(),
                 new TypeAnnotationsScanner(),
@@ -77,7 +77,11 @@ public class CamelContextUtils {
         Set<Class<?>> classes = refl.getTypesAnnotatedWith(JCBean.class);
         log.info("Found classes to add to camel context: {} from {}", classes, classPaths);
         PicoRegistry registry = new PicoRegistry();
-        registry.addComponent("jmvars", jmvars);
+        if (jmvars != null) {
+            registry.addComponent("jmvars", jmvars);
+        } else {
+            log.error("Failed to add JMeter Variables because its NULL!");
+        }
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
 
         Map<Class<?>, List<Method>> classMethods = refl.getMethodsAnnotatedWith(JCBean.class)
@@ -85,23 +89,26 @@ public class CamelContextUtils {
 
         log.info("Found classes in methods: {} from {}", classMethods, classPaths);
 
-        for(Map.Entry<Class<?>, List<Method>> entry : classMethods.entrySet()) {
+        for (Map.Entry<Class<?>, List<Method>> entry : classMethods.entrySet()) {
             try {
-                if(entry.getKey().getConstructor().getParameterCount() > 0){
-                    throw new IllegalArgumentException("Error, " + entry.getKey() + " constructor has parameters!");
+                if (entry.getKey().getConstructor().getParameterCount() > 0) {
+                    log.error(entry.getKey() + ": constructor parameters not allowed in config class!");
                 }
                 Object configInstance = entry.getKey().newInstance();
                 for (Method method : entry.getValue()) {
                     try {
-                        registry.addComponent(method.getAnnotation(JCBean.class).value(),
-                                getBeanFromMethod(method, configInstance));
-                    } catch(InvocationTargetException e){
-                        throw new RuntimeException("Failed to inialize bean " + method.getAnnotation(JCBean.class).value() +
+                        Object bean = getBeanFromMethod(method, configInstance);
+                        if (bean != null) {
+                            registry.addComponent(method.getAnnotation(JCBean.class).value(),
+                                    bean);
+                        }
+                    } catch (InvocationTargetException e) {
+                        log.error("Failed to inialize bean " + method.getAnnotation(JCBean.class).value() +
                                 " typeof " + method.getReturnType().getSimpleName() + " due to: " + e.getMessage(), e);
                     }
                 }
-            } catch(IllegalAccessException | InstantiationException | NoSuchMethodException e) {
-                throw new RuntimeException("Failed to initialize config " + entry.getKey().getSimpleName() +
+            } catch (IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+                log.error("Failed to initialize config " + entry.getKey().getSimpleName() +
                         " due to: " + e.getMessage(), e);
             }
         }
@@ -110,7 +117,8 @@ public class CamelContextUtils {
 
     private Object getBeanFromMethod(Method method, Object instance) throws InvocationTargetException, IllegalAccessException {
         if (method.getParameterCount() > 0) {
-            throw new IllegalArgumentException("Error, method " + method.getDeclaringClass().getSimpleName() + "::" + method.getName() + " has " + method.getParameterCount() + " parameters!");
+            log.error("Error, method " + method.getDeclaringClass().getSimpleName() + "::" + method.getName() + " has " + method.getParameterCount() + " parameters!");
+            return null;
         }
         return method.invoke(instance);
 
