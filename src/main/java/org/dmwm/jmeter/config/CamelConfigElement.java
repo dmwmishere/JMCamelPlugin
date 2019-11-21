@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
 import org.apache.jmeter.config.ConfigTestElement;
+import org.apache.jmeter.engine.util.NoConfigMerge;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.TestStateListener;
@@ -25,7 +26,7 @@ import java.util.Collection;
 @Slf4j
 @Getter
 @Setter
-public class CamelConfigElement extends ConfigTestElement implements TestBean, TestStateListener {
+public class CamelConfigElement extends ConfigTestElement implements TestBean, TestStateListener, NoConfigMerge {
 
     private static final long serialVersionUID = 1065500169997779419L;
 
@@ -79,6 +80,7 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
                                     new StringInputStream(routeXml, Charset.defaultCharset()) :
                                     new FileInputStream(routeDefFile))
                             .build();
+                    cctx.getShutdownStrategy().setTimeout(30);
                     cctx.start();
                     variables.putObject(contextName, cctx);
                 } catch (Exception e) {
