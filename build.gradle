@@ -3,8 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 group 'org.dmwm.jmeter'
-version '0.8.3'
+archivesBaseName = rootProject.name
+version '0.8.4'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -81,6 +85,24 @@ task runIt(dependsOn: jar) {
             args "-t", "$projectDir/scenario/TestPlugin.jmx"
         }
     }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
 }
 
 test {

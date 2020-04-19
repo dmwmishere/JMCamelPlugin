@@ -69,6 +69,8 @@ Use "name" to refer your beans in route definition.
  * JSR223 stuff to camel context
 
 2. Sampler:
+ * Multiple thread-groups with single context
+ * thread freezes if exception occures while context or bean init. i.e. exception were thrown in one of config methods
 
 3. Listener:
 * Mock listener
