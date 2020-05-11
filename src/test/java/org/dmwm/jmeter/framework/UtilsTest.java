@@ -55,6 +55,17 @@ public class UtilsTest {
     }
 
     @Test
+    public void test_00_0_init_var_priority() throws Exception {
+        System.setProperty("bean_class_path", "qwerty");
+        vars.put("bean_class_path", "org.dmwm.jmeter.framework.testdata:org.dmwm.jmeter.framework.secondpackage");
+        PicoRegistry registry = CamelContextUtils.initRegistry(vars);
+
+        assertThat(registry.lookup("NN"), notNullValue());
+        assertThat(registry.lookup("NN-m"), notNullValue());
+
+    }
+
+    @Test
     public void test_02_0_single_class() {
         System.setProperty("bean_class_path", "org.dmwm.jmeter.framework.testdata.A:org.dmwm.jmeter.framework.testdata.B");
         PicoRegistry registry = CamelContextUtils.initRegistry(vars);

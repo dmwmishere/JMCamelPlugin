@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @UtilityClass
 public class CamelContextUtils {
+
+    private static String BEAN_CLASS_PATH = "bean_class_path";
 
     public void initBean(String name, String className, MutablePicoContainer picoContainer) {
         try {
@@ -41,7 +44,7 @@ public class CamelContextUtils {
         Properties props = new Properties(context.getProperties());
 
         context.getVariables().entrySet().forEach(entry -> {
-            System.out.println("Variable " + entry.getKey() + " = " + entry.getValue().toString());
+            log.debug("Variable " + entry.getKey() + " = " + entry.getValue().toString());
             props.setProperty(entry.getKey(), entry.getValue().toString());
         });
 
@@ -68,7 +71,9 @@ public class CamelContextUtils {
     }
 
     public PicoRegistry initRegistry(JMeterVariables jmvars) {
-        String[] classPaths = System.getProperty("bean_class_path", "org.dmwm.jmeter.beans").split(":");
+        String[] classPaths = Optional.ofNullable(jmvars.get(BEAN_CLASS_PATH)).orElse(
+                System.getProperty(BEAN_CLASS_PATH, "org.dmwm.jmeter.beans")
+        ).split(":");
         Reflections refl = new Reflections(classPaths,
                 new MethodAnnotationsScanner(),
                 new TypeAnnotationsScanner(),
