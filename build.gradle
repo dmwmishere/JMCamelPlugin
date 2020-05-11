@@ -8,7 +8,7 @@ apply plugin: 'signing'
 
 group 'org.dmwm.jmeter'
 archivesBaseName = rootProject.name
-version '0.8.4'
+version '0.8.5'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
