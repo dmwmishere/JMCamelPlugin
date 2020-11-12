@@ -13,8 +13,8 @@ import java.util.Optional;
 @Slf4j
 public class CamelDirectSampler extends AbstractJavaSamplerClient {
 
-    private final static String DIRECT_NAME = "directName";
-    private final static String BODY_CONTENT = "bodyContent";
+    private static final String DIRECT_NAME = "directName";
+    private static final String BODY_CONTENT = "bodyContent";
 
     private CamelContext cctx;
 
@@ -24,7 +24,6 @@ public class CamelDirectSampler extends AbstractJavaSamplerClient {
         try {
             cctx = SingletonCamelContext.instance();
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(e.getMessage());
         }
     }
@@ -53,15 +52,6 @@ public class CamelDirectSampler extends AbstractJavaSamplerClient {
         res.setResponseData(Optional.ofNullable(exchange.getIn().getBody())
                 .orElse("null").toString());
         res.setResponseHeaders(exchange.getIn().getHeaders().toString());
-
-
-//        Object response = cctx.createFluentProducerTemplate()
-//                .to("direct:".concat(directName))
-//                .withBody(body)
-//                .request();
-//
-//        res.setResponseData(Optional.ofNullable(response)
-//                .orElse("null").toString());
 
         res.sampleEnd();
 

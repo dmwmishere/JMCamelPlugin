@@ -1,8 +1,8 @@
-package org.dmwm.jmeter.framework;
+package org.dmwm.jmeter.util;
 
 import org.apache.jmeter.threads.JMeterVariables;
+import org.dmwm.jmeter.framework.PicoRegistry;
 import org.dmwm.jmeter.framework.testdata.D;
-import org.dmwm.jmeter.util.CamelContextUtils;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class UtilsTest {
+public class CamelContextUtilsTest {
 
     JMeterVariables vars = new JMeterVariables();
 

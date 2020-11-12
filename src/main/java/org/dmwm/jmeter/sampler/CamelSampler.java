@@ -102,19 +102,19 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
 
     private byte[] saveResults(Exchange exchange) {
 
-        Object body = exchange.getIn().getBody();
+        Object bodyResult = exchange.getIn().getBody();
 
         if (!resultName.isEmpty()) {
             JMeterVariables vars = getThreadContext().getVariables();
             if (saveResultAs.equals(SAVE_AS_STRING)) {
-                vars.putObject(resultName, body.toString());
+                vars.putObject(resultName, bodyResult.toString());
             } else if (saveResultAs.equals(SAVE_AS_OBJECT)) {
-                vars.putObject(resultName, body);
+                vars.putObject(resultName, bodyResult);
             } else if (saveResultAs.equals(SAVE_EXCHANGE)) {
                 vars.putObject(resultName, exchange);
             }
         }
-        return body.toString().getBytes(Charset.defaultCharset());
+        return bodyResult.toString().getBytes(Charset.defaultCharset());
     }
 
     @Override
@@ -124,5 +124,6 @@ public class CamelSampler extends AbstractSampler implements TestBean, ThreadLis
 
     @Override
     public void threadFinished() {
+        //TODO: remove inflight messages from context?
     }
 }

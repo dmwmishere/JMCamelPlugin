@@ -1,5 +1,6 @@
 package org.dmwm.jmeter.util;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.component.properties.PropertiesComponent;
@@ -27,7 +28,10 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class CamelContextUtils {
 
-    private static String BEAN_CLASS_PATH = "bean_class_path";
+    /**
+     * class path to scan for {@link JCBean}
+     */
+    private static final String BEAN_CLASS_PATH = "bean_class_path";
 
     public void initBean(String name, String className, MutablePicoContainer picoContainer) {
         try {
@@ -38,6 +42,11 @@ public class CamelContextUtils {
         }
     }
 
+    /**
+     * get jmeter properties from context and fill camel properties component
+     * @param context jmeter context to get properties from
+     * @return camel properties component
+     */
     public PropertiesComponent initProperties(JMeterContext context) {
         PropertiesComponent pc = new PropertiesComponent();
 
@@ -52,14 +61,26 @@ public class CamelContextUtils {
         return pc;
     }
 
+    /**
+     * convert java properties into camel properties component
+     * @param properties java properties
+     * @return camel properties component
+     */
     public PropertiesComponent initProperties(Properties properties) {
         PropertiesComponent pc = new PropertiesComponent();
         pc.setInitialProperties(properties);
         return pc;
     }
 
-    public Converter initConverter(String converterClass) {
-        Converter<?> converter = null;
+    /**
+     * get converter instance from class string
+     * @param converterClass fully qualified class name
+     * @param <T> type to convert to
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Converter<T> initConverter(String converterClass) {
+        Converter<T> converter = null;
         try {
             if (!converterClass.equals("None")) {
                 converter = (Converter) Class.forName(converterClass).newInstance();
@@ -70,7 +91,7 @@ public class CamelContextUtils {
         return converter;
     }
 
-    public PicoRegistry initRegistry(JMeterVariables jmvars) {
+    public PicoRegistry initRegistry(@NonNull JMeterVariables jmvars) {
         String[] classPaths = Optional.ofNullable(jmvars.get(BEAN_CLASS_PATH)).orElse(
                 System.getProperty(BEAN_CLASS_PATH, "org.dmwm.jmeter.beans")
         ).split(":");
@@ -82,11 +103,7 @@ public class CamelContextUtils {
         Set<Class<?>> classes = refl.getTypesAnnotatedWith(JCBean.class);
         log.info("Found classes to add to camel context: {} from {}", classes, classPaths);
         PicoRegistry registry = new PicoRegistry();
-        if (jmvars != null) {
-            registry.addComponent("jmvars", jmvars);
-        } else {
-            log.error("Failed to add JMeter Variables because its NULL!");
-        }
+        registry.addComponent("jmvars", jmvars);
         classes.forEach(clazz -> registry.addComponent(clazz.getAnnotation(JCBean.class).value(), clazz));
 
         Map<Class<?>, List<Method>> classMethods = refl.getMethodsAnnotatedWith(JCBean.class)

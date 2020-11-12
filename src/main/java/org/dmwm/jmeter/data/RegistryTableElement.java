@@ -16,10 +16,12 @@ public class RegistryTableElement extends AbstractTestElement {
         super();
     }
 
+    @Override
     public String getName() {
         return getProperty(BEAN_NAME).getStringValue();
     }
 
+    @Override
     public void setName(String name) {
         setProperty(BEAN_NAME, name);
     }

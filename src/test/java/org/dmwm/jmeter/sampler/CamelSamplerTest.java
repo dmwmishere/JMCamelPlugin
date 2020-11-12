@@ -1,4 +1,4 @@
-package org.dmwm.jmeter.scenario;
+package org.dmwm.jmeter.sampler;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -9,7 +9,6 @@ import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.dmwm.jmeter.framework.ContextBuilder;
-import org.dmwm.jmeter.sampler.CamelSampler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +24,7 @@ import java.util.concurrent.Future;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class SampleTest {
+public class CamelSamplerTest {
 
     private final static String CONTEXT_NAME = "jm-test-context";
 

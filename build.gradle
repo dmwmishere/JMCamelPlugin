@@ -4,7 +4,7 @@ plugins {
 }
 
 apply plugin: 'maven'
-apply plugin: 'signing'
+//apply plugin: 'signing'
 
 group 'org.dmwm.jmeter'
 archivesBaseName = rootProject.name
@@ -101,9 +101,9 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 
 test {
     exclude '**/*ScenarioTest*'

@@ -4,6 +4,7 @@ import com.helger.commons.io.stream.StringInputStream;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
@@ -104,7 +105,7 @@ public class CamelConfigElement extends ConfigTestElement implements TestBean, T
         try {
             cctx.stop();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("ERROR WHILE TEST END: {}", e.getMessage());
         }
     }
 

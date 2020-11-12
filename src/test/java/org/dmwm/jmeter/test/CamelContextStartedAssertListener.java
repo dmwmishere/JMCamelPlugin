@@ -21,11 +21,10 @@ public class CamelContextStartedAssertListener implements StartupListener {
         contextStarted = true;
     }
 
-    public CamelContext startWithAssert(CamelContext camelContext) {
+    public CamelContext startContext(CamelContext camelContext) {
         try {
             camelContext.addStartupListener(this);
             camelContext.start();
-            assertContextStarted();
         } catch(Exception e){
             fail(e.getClass().getSimpleName() + " while starting context: " + e.getMessage());
         }

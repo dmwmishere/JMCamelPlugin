@@ -1,11 +1,10 @@
-package org.dmwm.jmeter.scenario;
+package org.dmwm.jmeter.config;
 
 import org.apache.camel.CamelContext;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
-import org.dmwm.jmeter.config.CamelConfigElement;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,14 +12,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class ConfigTest {
+public class CamelConfigElementTest {
 
     private final static String CONTEXT_NAME = "jm-test-context";
 
     private JMeterVariables vars = new JMeterVariables();
     private JMeterContext jmCtx;
 
-    public ConfigTest() {
+    public CamelConfigElementTest() {
         JMeterUtils.loadJMeterProperties(
                 ClassLoader.getSystemResource("jmeter.properties").getFile());
         JMeterUtils.initLocale();

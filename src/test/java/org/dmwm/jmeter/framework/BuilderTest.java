@@ -27,18 +27,20 @@ public class BuilderTest {
 
     @Test
     public void test_00_0_build_start() {
-        cctxSAL.startWithAssert(builder.build());
+        cctxSAL.startContext(builder.build());
+        cctxSAL.assertContextStarted();
     }
 
 
     @Test
     public void test_00_1_addRoute() throws Exception {
-        cctxSAL.startWithAssert(builder.addRoutes(new RouteBuilder() {
+        cctxSAL.startContext(builder.addRoutes(new RouteBuilder() {
             @Override
             public void configure() {
                 from("direct:test").log("test");
             }
         }).build());
+        cctxSAL.assertContextStarted();
     }
 
     @Test
@@ -67,7 +69,8 @@ public class BuilderTest {
                         from("direct:{{routeName}}").log("test");
                     }
                 }).build();
-        cctxSAL.startWithAssert(cctx);
+        cctxSAL.startContext(cctx);
+        cctxSAL.assertContextStarted();
     }
 
     @Test
@@ -77,7 +80,8 @@ public class BuilderTest {
         CamelContext cctx = builder
                 .setRegistry(registry)
                 .build();
-        cctxSAL.startWithAssert(cctx);
+        cctxSAL.startContext(cctx);
+        cctxSAL.assertContextStarted();
         assertThat(cctx.getRegistry().lookupByName("testBean").toString(), equalTo("sample text"));
     }
 
@@ -103,7 +107,9 @@ public class BuilderTest {
                 .setRegistry(registry)
                 .build();
 
-        cctxSAL.startWithAssert(cctx);
+        cctxSAL.startContext(cctx);
+        cctxSAL.assertContextStarted();
+
         assertThat(cctx.getName(), equalTo("testContext"));
 
         cctx.createFluentProducerTemplate()

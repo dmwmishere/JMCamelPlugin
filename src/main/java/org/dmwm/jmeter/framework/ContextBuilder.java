@@ -13,6 +13,7 @@ import java.util.Properties;
 
 /**
  * implements builder for default camel context
+ *
  * @see DefaultCamelContext
  */
 public class ContextBuilder implements Builder {
@@ -24,20 +25,32 @@ public class ContextBuilder implements Builder {
     }
 
     @Override
-    public Builder addRoutes(InputStream routesXmlContent) throws Exception {
-        addRoutes(cctx.loadRoutesDefinition(routesXmlContent));
+    public Builder addRoutes(InputStream routesXmlContent) throws ContextConfigurationException {
+        try {
+            addRoutes(cctx.loadRoutesDefinition(routesXmlContent));
+        } catch (Exception e) {
+            throw new ContextConfigurationException(e);
+        }
         return this;
     }
 
     @Override
-    public Builder addRoutes(RouteBuilder routeBuilder) throws Exception {
-        cctx.addRoutes(routeBuilder);
+    public Builder addRoutes(RouteBuilder routeBuilder) throws ContextConfigurationException {
+        try {
+            cctx.addRoutes(routeBuilder);
+        } catch (Exception e) {
+            throw new ContextConfigurationException(e);
+        }
         return this;
     }
 
     @Override
-    public Builder addRoutes(RoutesDefinition routesDefinition) throws Exception {
-        cctx.addRouteDefinitions(routesDefinition.getRoutes());
+    public Builder addRoutes(RoutesDefinition routesDefinition) throws ContextConfigurationException {
+        try {
+            cctx.addRouteDefinitions(routesDefinition.getRoutes());
+        } catch (Exception e) {
+            throw new ContextConfigurationException(e);
+        }
         return this;
     }
 
